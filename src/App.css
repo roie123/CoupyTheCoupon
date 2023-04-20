@@ -1,38 +1,60 @@
-.App {
-  text-align: center;
+.app{
+    height: 94svh;
+    width: 100%;
+    overflow: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.main-cont {
+    margin-top: 7vh;
+    height: 100%;
+    width: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+.actions-cont{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 3svh;
+    align-items: center;
+    justify-content: center;
+    height: 60svh;
+    overflow-y: scroll;
+    padding: 2vh;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px inset;
+    border-radius: 2vh;
+
+}
+.action-card{
+    min-height: 25svh;
+    min-width: 25svh;
+    height: 15svh;
+    width: 15svh;
+    padding: 2vh;
+    border-radius: 3vh;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.action-name{
+    text-align: center;
+}
+.action-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1vh;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@media screen and (max-width: 600px) {
+    .action-card{
+        min-height: 10svh;
+        min-width: 10svh;
+        height: 15svh;
+        width: 15svh;
+        padding: 2vh;
+        border-radius: 3vh;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
 }
