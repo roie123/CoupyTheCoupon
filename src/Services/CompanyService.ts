@@ -1,10 +1,20 @@
 import {CompanyDTO} from "../Models/Company";
-import axios from "axios/index";
 import appConfig from "../Config/Config";
 import {Coupon} from "../Models/Coupon";
 import {CategoryType} from "../Models/Enums/CategoryType";
+import axios from "axios";
 
 export class CompanyService {
+    private static instance: CompanyService;
+
+    public static getInstance(): CompanyService {
+        if (!CompanyService.instance) {
+            CompanyService.instance = new CompanyService();
+        }
+
+        return CompanyService.instance;
+    }
+
 
 
     async addCoupon(couponToAdd:Coupon,companyId:number):Promise<Coupon>{

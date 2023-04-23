@@ -12,7 +12,7 @@ export default function HomePage(){
      *  (2) => company
      *  (3) => customer
      */
-    const [displaySelection,setdisplaySelection] =useState<number>(1);
+    const [displaySelection,setdisplaySelection] =useState<number>(2);
     
 
     return(

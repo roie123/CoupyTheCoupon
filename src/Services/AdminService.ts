@@ -49,13 +49,13 @@ export class AdminService {
     }
 
     async addCustomer(customerToAdd:Customer):Promise<Customer>{
-        const  response = await axios.post<Customer>(`${appConfig.adminApiUrl}/customer`);
+        const  response = await axios.post<Customer>(`${appConfig.adminApiUrl}/customer`,customerToAdd);
         return response.data;
 
     }
 
     async updateCustomer(customerToAdd:Customer,id:number):Promise<Customer>{
-        const  response = await axios.put<Customer>(`${appConfig.adminApiUrl}/customer/${id}`);
+        const  response = await axios.put<Customer>(`${appConfig.adminApiUrl}/customer/${id}`,customerToAdd);
         return response.data;
 
     }
@@ -71,8 +71,8 @@ export class AdminService {
         return response.data;
 
     }
-    async getSingleCustomer(id:number):Promise<Customer[]>{
-        const  response = await axios.get<Customer[]>(`${appConfig.adminApiUrl}/customer${id}`);
+    async getSingleCustomer(id:number):Promise<Customer>{
+        const  response = await axios.get<Customer>(`${appConfig.adminApiUrl}/customer/${id}`);
         return response.data;
 
     }

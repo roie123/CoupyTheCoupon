@@ -9,4 +9,5 @@ UpdateCustomer,
 DeleteCustomer,
 GetAllCustomers,
 GetSingleCustomer,
+    GoToActionsSelection
 }

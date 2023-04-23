@@ -1,45 +1,109 @@
 import './CompanyPage.css'
-import ActionCard from "../../General Components/ActionCard";
-import AddIcon from "@mui/icons-material/Add";
-import UpgradeIcon from "@mui/icons-material/Upgrade";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import StoreIcon from "@mui/icons-material/Store";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import InfoIcon from '@mui/icons-material/Info';
-export default function CompanyPage(){
+import {CompanyActionTypes} from "../../Models/Enums/CompanyActionTypes";
+import CompanyActionSelection from "./Company Dumb Shits/CompanyActionSelection";
+import {Coupon} from "../../Models/Coupon";
+import {useState} from "react";
+import CompanyCouponActions from "./Company Dumb Shits/CompanyCouponActions";
+import CompanyCoupons from "./Company Dumb Shits/CompanyCoupons";
+import {CompanyService} from "../../Services/CompanyService";
+import {CouponFilterTypes} from "../../Models/Enums/CouponFilterTypes";
+import {CategoryType} from "../../Models/Enums/CategoryType";
 
-function forFun(){
+export default function CompanyPage() {
+    const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(0);
 
-}
+    const companyService: CompanyService = CompanyService.getInstance();
 
-    return(
+    async function handleCompanyActionSelection(action: CompanyActionTypes) {
+
+        switch (action) {
+            case CompanyActionTypes.AddCoupon:
+                setdisplayedActionSelection(1);
+                console.log("Hi");
+
+                break;
+            case CompanyActionTypes.UpdateCoupon:
+                setdisplayedActionSelection(2);
+
+                break;
+            case CompanyActionTypes.DeleteCoupon:
+                setdisplayedActionSelection(3);
+
+                break;
+            case CompanyActionTypes.GetCoupons:
+                await getCompanyCoupons(CouponFilterTypes.None);
+                setdisplayedActionSelection(4);
+                break;
+            case CompanyActionTypes.GetCouponsByCategory:
+                setdisplayedActionSelection(5);
+                break;
+            case CompanyActionTypes.GetCouponsByPrice:
+                setdisplayedActionSelection(5);
+                break;
+            case CompanyActionTypes.GetCompanyDetails:
+                break;
+            case CompanyActionTypes.GoBackToSelection:
+                setdisplayedActionSelection(0);
+                break;
+
+        }
+
+    }
+
+
+    ///COMPANY COUPONS LOGIC ///////////////////////////
+
+
+    function onSubmitFormCoupon(data: Coupon) {
+
+    }
+
+    ///COMPANY COUPONS LOGIC ///////////////////////////
+
+
+    ////////////GET COMPANY COUPONS ///////////////////////////
+
+    //TODO make the logged in company the one who actually gets called
+    const [companyCoupons, setcompanyCoupons] = useState<Coupon[]>([]);
+
+
+    async function getCompanyCoupons(filter: CouponFilterTypes, maxPrice?: number, category?: CategoryType) {
+
+        switch (filter) {
+            case CouponFilterTypes.None: {
+                const coupons: Coupon[] = await companyService.getCompanyCoupons(330);
+                setcompanyCoupons(coupons);
+                break;
+            }
+            case CouponFilterTypes.ByMaxPrice: {
+                const coupons: Coupon[] = await companyService.getCompanyCouponsByMaxPrice(330, maxPrice!);
+                setcompanyCoupons(coupons);
+                break;
+
+            }
+            case CouponFilterTypes.ByCategory: {
+                const coupons: Coupon[] = await companyService.getCompanyCouponsByCategory(330, category!);
+                setcompanyCoupons(coupons);
+                break;
+
+            }
+
+        }
+
+
+    }
+
+
+    ////////////GET COMPANY COUPONS ///////////////////////////
+    return (
         <>
-            <div className="main-cont">
-                <div className="actions-cont">
-                    <ActionCard name={'Add Coupon'} onClick={forFun} SvgIcon={AddIcon}/>
-                    <ActionCard name={'Update Coupon'} onClick={forFun} SvgIcon={UpgradeIcon}/>
-                    <ActionCard name={'Delete Coupon'} onClick={forFun} SvgIcon={DeleteIcon}/>
-                    <ActionCard name={'Get Coupons'} onClick={forFun} SvgIcon={FormatListBulletedIcon}/>
-                    <ActionCard name={'Get Coupons (By Category)'} onClick={forFun} SvgIcon={FormatListBulletedIcon}/>
-                    <ActionCard name={'Get Coupons (By Price)'} onClick={forFun} SvgIcon={FormatListBulletedIcon}/>
-                    <ActionCard name={'Get Company Details'} onClick={forFun} SvgIcon={InfoIcon}/>
-
-
-
-
-
-
-
-
-
-                </div>{/*END OF CARDS CONTAINER */}
-            </div>
-
+            <CompanyActionSelection displayedActionSelection={displayedActionSelection}
+                                    handleCompanyActionSelection={handleCompanyActionSelection}/>
+            <CompanyCouponActions onSubmitFormCompany={onSubmitFormCoupon}
+                                  displayedActionSelection={displayedActionSelection}
+                                  handleActionSelection={handleCompanyActionSelection}/>
+            <CompanyCoupons coupons={companyCoupons} displayedActionSelection={displayedActionSelection}
+                            handleActionSelection={handleCompanyActionSelection}/>
         </>
     )
 }

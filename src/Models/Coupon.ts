@@ -4,8 +4,8 @@ export class Coupon{
     id:number=0;
     title:string='';
     description:string='';
-    startDate:string='';
-    endDate:string=''
+    startDate:Date=Date.prototype;
+    endDate:Date=Date.prototype;
     amount:number=0;
     price :number =0;
     image:string='';
