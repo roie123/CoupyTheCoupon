@@ -15,7 +15,9 @@ export class CompanyService {
         return CompanyService.instance;
     }
 
+async doSomethi(){
 
+}
 
     async addCoupon(couponToAdd:Coupon,companyId:number):Promise<Coupon>{
         const  response = await axios.post<Coupon>(`${appConfig.companyApiUrl}/coupon/${companyId}`);
