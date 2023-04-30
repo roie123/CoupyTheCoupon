@@ -1,0 +1,13 @@
+.company-cont{
+    overflow: hidden;
+}
+
+
+.filter-selection-cont{
+    margin: 3svh auto;
+    padding: 1vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

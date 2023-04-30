@@ -44,7 +44,7 @@ async doSomethi(){
 
 
     }
-    async getCompanyCouponsByCategory(companyId:number,category:CategoryType):Promise<Coupon[]>{
+    async getCompanyCouponsByCategory(companyId:number,category:CategoryType|string):Promise<Coupon[]>{
         const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/byCat/${companyId}/${category}`);
         return response.data;
 

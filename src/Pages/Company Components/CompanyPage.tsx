@@ -11,6 +11,8 @@ import {CategoryType} from "../../Models/Enums/CategoryType";
 
 export default function CompanyPage() {
     const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(0);
+    const [maxPrice,setmaxPrice] =useState<number>(0);
+    
 
     const companyService: CompanyService = CompanyService.getInstance();
 
@@ -38,7 +40,7 @@ export default function CompanyPage() {
                 setdisplayedActionSelection(5);
                 break;
             case CompanyActionTypes.GetCouponsByPrice:
-                setdisplayedActionSelection(5);
+                setdisplayedActionSelection(6);
                 break;
             case CompanyActionTypes.GetCompanyDetails:
                 break;
@@ -94,16 +96,53 @@ export default function CompanyPage() {
     }
 
 
+
+
+    const categories = Object.values(CategoryType);
+
+    async  function handleChangeInSelectedCategory(categoryInString:string){
+        //TODO if redux already has the coupons pull from there
+
+     setcompanyCoupons(await  companyService.getCompanyCouponsByCategory(330,categoryInString))
+
+    }
+    async  function handleChangeInMaxPrice(maxPrice:number){
+        //TODO if redux already has the coupons pull from there
+
+        setcompanyCoupons(await  companyService.getCompanyCouponsByMaxPrice(330,maxPrice))
+
+    }
+
+
+
+
+
+
+
+
+
+
+
     ////////////GET COMPANY COUPONS ///////////////////////////
     return (
         <>
-            <CompanyActionSelection displayedActionSelection={displayedActionSelection}
-                                    handleCompanyActionSelection={handleCompanyActionSelection}/>
-            <CompanyCouponActions onSubmitFormCompany={onSubmitFormCoupon}
-                                  displayedActionSelection={displayedActionSelection}
-                                  handleActionSelection={handleCompanyActionSelection}/>
-            <CompanyCoupons coupons={companyCoupons} displayedActionSelection={displayedActionSelection}
-                            handleActionSelection={handleCompanyActionSelection}/>
+            <div className="company-cont">
+                <CompanyActionSelection displayedActionSelection={displayedActionSelection}
+                                        handleCompanyActionSelection={handleCompanyActionSelection}/>
+                <CompanyCouponActions onSubmitFormCompany={onSubmitFormCoupon}
+                                      displayedActionSelection={displayedActionSelection}
+                                      handleActionSelection={handleCompanyActionSelection}/>
+                <CompanyCoupons coupons={companyCoupons} displayedActionSelection={displayedActionSelection}
+                                handleActionSelection={handleCompanyActionSelection}
+                                    handleChangeInSelectedCategory={handleChangeInSelectedCategory}
+                                categories={categories}
+                                handleChangeInMaxPrice={handleChangeInMaxPrice}
+
+                />
+
+
+            </div>
+
         </>
     )
 }

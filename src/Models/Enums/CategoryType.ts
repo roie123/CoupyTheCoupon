@@ -1,5 +1,5 @@
 export enum CategoryType{
-    Shitty,
-    SuckAss,
-    StupidFace
+    Shitty='Shitty',
+    SuckAss='SuckAss',
+    StupidFace='StupidFace'
 }
