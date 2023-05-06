@@ -111,9 +111,19 @@ margin-right: 1vh;
     border-radius: 3svh;
     padding: 3vh;
 }
+
 .upper-coupon-cont{
     display: flex;
     flex-direction: column;
+    position:relative;
+}
+.buy-cont{
+    position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
 }
 .c-title{
     font-weight: bolder;

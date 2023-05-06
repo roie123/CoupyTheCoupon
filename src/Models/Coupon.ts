@@ -1,3 +1,4 @@
+import {CategoryType} from "./Enums/CategoryType";
 
 
 export class Coupon{
@@ -9,6 +10,7 @@ export class Coupon{
     amount:number=0;
     price :number =0;
     image:string='';
+    category:CategoryType=CategoryType.StupidFace;
     /*
      private Long id;
 
