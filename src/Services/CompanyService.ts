@@ -51,7 +51,7 @@ async doSomethi(){
 
     }
     async getCompanyCouponsByMaxPrice(companyId:number,maxPrice:number):Promise<Coupon[]>{
-        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/byCat/${companyId}/${maxPrice}`);
+        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/byMaxPrice/${companyId}/${maxPrice}`);
         return response.data;
 
 

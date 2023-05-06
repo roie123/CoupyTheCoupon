@@ -1,13 +1,33 @@
-.company-cont{
+.company-cont {
     overflow: hidden;
 }
 
 
-.filter-selection-cont{
-    margin: 3svh auto;
+.filter-selection-cont {
+    margin: 3 svh auto;
     padding: 1vh;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.company-details-cont {
+    margin-top: 5vh;
+    padding: 3vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 10vh;
+}
+
+h5 {
+    color: grey;
+    text-align: start;
+}
+
+h5 span {
+    color: black;
+    text-align: end;
+    font-size: 1.1rem;
 }

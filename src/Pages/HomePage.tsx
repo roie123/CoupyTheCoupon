@@ -19,7 +19,7 @@ export default function HomePage(){
         <>
             {displaySelection===0 ? (null):(null)}
             {displaySelection===1 ? (<AdminPage/>):(null)}
-            {displaySelection===2 ? (<CompanyPage/>):(null)}
+            {displaySelection===2 ? (<CompanyPage/>):null}
             {displaySelection===3 ? (<CustomerPage/>):(null)}
 
 

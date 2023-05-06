@@ -2,18 +2,27 @@ import './CompanyPage.css'
 import {CompanyActionTypes} from "../../Models/Enums/CompanyActionTypes";
 import CompanyActionSelection from "./Company Dumb Shits/CompanyActionSelection";
 import {Coupon} from "../../Models/Coupon";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CompanyCouponActions from "./Company Dumb Shits/CompanyCouponActions";
 import CompanyCoupons from "./Company Dumb Shits/CompanyCoupons";
 import {CompanyService} from "../../Services/CompanyService";
 import {CouponFilterTypes} from "../../Models/Enums/CouponFilterTypes";
 import {CategoryType} from "../../Models/Enums/CategoryType";
+import CompanyDetails from "./Company Dumb Shits/CompanyDetails";
+import {CompanyDTO} from "../../Models/Company";
 
 export default function CompanyPage() {
     const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(0);
     const [maxPrice,setmaxPrice] =useState<number>(0);
+    const [currentCompany,setcurrentCompany] =useState<CompanyDTO>();
+    useEffect(()=> {
+    setData();
+    }, [])
     
-
+    async function setData(){
+        setcurrentCompany(await companyService.getCompanyDetails(330));
+    }
+    console.log(currentCompany);
     const companyService: CompanyService = CompanyService.getInstance();
 
     async function handleCompanyActionSelection(action: CompanyActionTypes) {
@@ -43,6 +52,8 @@ export default function CompanyPage() {
                 setdisplayedActionSelection(6);
                 break;
             case CompanyActionTypes.GetCompanyDetails:
+                setdisplayedActionSelection(7);
+
                 break;
             case CompanyActionTypes.GoBackToSelection:
                 setdisplayedActionSelection(0);
@@ -108,8 +119,8 @@ export default function CompanyPage() {
     }
     async  function handleChangeInMaxPrice(maxPrice:number){
         //TODO if redux already has the coupons pull from there
-
-        setcompanyCoupons(await  companyService.getCompanyCouponsByMaxPrice(330,maxPrice))
+    console.log("hi");
+      setcompanyCoupons( await companyService.getCompanyCouponsByMaxPrice(330,maxPrice));
 
     }
 
@@ -139,6 +150,7 @@ export default function CompanyPage() {
                                 handleChangeInMaxPrice={handleChangeInMaxPrice}
 
                 />
+                <CompanyDetails   displaySelection={displayedActionSelection} currentCompany={currentCompany}  />
 
 
             </div>

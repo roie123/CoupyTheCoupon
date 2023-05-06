@@ -4,6 +4,7 @@ import {CompanyActionTypes} from "../../../Models/Enums/CompanyActionTypes";
 import {CategoryType} from "../../../Models/Enums/CategoryType";
 import {useState} from "react";
 import {CompanyService} from "../../../Services/CompanyService";
+import {useForm} from "react-hook-form";
 
 interface CompanyCouponProps {
     displayedActionSelection: number;
@@ -14,11 +15,15 @@ interface CompanyCouponProps {
     handleChangeInSelectedCategory(category: string | undefined): void;
 
     categories: (string | CategoryType)[];
-    handleChangeInMaxPrice(max:number):void;
-}
 
+    handleChangeInMaxPrice(max: number): void;
+}
+interface MaxPriceForm {
+    max:number
+}
 export default function CompanyCoupons(props: CompanyCouponProps) {
 
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<MaxPriceForm>();
 
     return (
 
@@ -106,9 +111,10 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
             {props.displayedActionSelection === 6 ?
                 <>
                     <div className="filter-selection-cont">
-                        <form>
+                        <form onSubmit={handleSubmit((e) => props.handleChangeInMaxPrice(e.max))} >
 
                             <Input
+                                {...register('max')}
                                 sx={{width: '80%', margin: 'auto'}}
                                 color="primary"
                                 disabled={false}
@@ -118,7 +124,7 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
                                 slotProps={{
                                     input: {
                                         min: 1,
-                                        max: 5,
+                                        max: 16000,
                                         step: 0.1,
                                     },
                                 }}
@@ -142,7 +148,6 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
                             />
 
                         </form>
-
 
 
                     </div>
