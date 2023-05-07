@@ -19,7 +19,7 @@ export default function CustomerCoupons(props: CustomerCouponsProps) {
 
                 <div className="coupon-list-cont">
                     {props.coupons.map(coupon => (
-                        <CouponCard coupon={coupon}/>
+                        <CouponCard localId={coupon.id} coupon={coupon}/>
                     ))
                     }
                 </div>

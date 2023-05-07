@@ -9,6 +9,7 @@ import {CustomerService} from "../../Services/CustomerService";
 import {Button, Snackbar} from "@mui/material";
 import CustomerCoupons from "./CustomerLittleThings/CustomerCoupons";
 import GetCouponsByAttribute from "./CustomerLittleThings/GetCouponsBy";
+import {CategoryType} from "../../Models/Enums/CategoryType";
 
 export default function CustomerPage() {
 
@@ -19,9 +20,21 @@ export default function CustomerPage() {
     const [snackBarSelection, setsnackBarSelection] = useState<number>(0);
     const [customerCoupons, setcustomerCoupons] = useState<Coupon[]>([]);
     const [popUpSelection, setpopUpSelection] = useState<number>(0);
+    const [advanceSearchParameter, setadvanceSearchParameter] = useState<number>(0);
 
 
     const customerService: CustomerService = CustomerService.getInstance();
+
+
+    /**
+     * This Method Will change the advanceSearchSelection
+     * author : Roie Ivri
+     * Created At 07/05/2023 13:33
+     */
+    function changeAdvanceSearchSelection(selection: number) {
+        setadvanceSearchParameter(selection);
+    }
+
 
     /**
      * This Method changes the search query by a ChangeEvent
@@ -36,8 +49,9 @@ export default function CustomerPage() {
 
     /**
      * This Method Will change the availableCoupons dynamically
-     * author : Roie Ivri
-     * Created At 06/05/2023 11:45
+     * @author : Roie Ivri
+     * @Created At 06/05/2023 11:45
+     *
      */
     function handleChangeInDisplayedCoupons(couponsToDisplay: Coupon[]) {
         setavailableCoupons(couponsToDisplay);
@@ -69,14 +83,14 @@ export default function CustomerPage() {
         }
         switch (filter) {
             case CouponSearchFilterTypes.byId:
-                setdisplayedCoupons(customerService.sortCoupons(availableCoupons, CouponSearchFilterTypes.byId))
+                setdisplayedCoupons(customerService.sortCoupons(displayedCoupons, CouponSearchFilterTypes.byId))
                 break;
             case CouponSearchFilterTypes.byPrice:
-                setdisplayedCoupons(customerService.sortCoupons(availableCoupons, CouponSearchFilterTypes.byPrice))
+                setdisplayedCoupons(customerService.sortCoupons(displayedCoupons, CouponSearchFilterTypes.byPrice))
 
                 break;
             case CouponSearchFilterTypes.byCategory:
-                setdisplayedCoupons(customerService.sortCoupons(availableCoupons, CouponSearchFilterTypes.byCategory))
+                setdisplayedCoupons(customerService.sortCoupons(displayedCoupons, CouponSearchFilterTypes.byCategory))
 
                 break;
             case CouponSearchFilterTypes.byTitle:
@@ -146,6 +160,19 @@ export default function CustomerPage() {
      */
     function purchaseCoupon(coupon: Coupon) {
         customerService.purchaseCoupon(coupon.id, 204).then(() => {
+            const purchasedCoupon = document.getElementById(coupon.id.toString())!;
+            purchasedCoupon.style.animationName = 'purchase'
+            purchasedCoupon.style.zIndex = '10'
+            purchasedCoupon.style.animationIterationCount = '1';
+            purchasedCoupon.style.animationDelay = '0';
+            purchasedCoupon.style.animationDuration = '3s';
+            purchasedCoupon.style.animationFillMode = 'forwards';
+
+            setTimeout(() => {
+                setdisplayedCoupons([...displayedCoupons.filter(value => value.id !== coupon.id)])
+
+            }, 1000)
+
             setsnackBarSelection(1);
 
         }).catch((reason) => {
@@ -155,6 +182,8 @@ export default function CustomerPage() {
         setTimeout(() => {
             setsnackBarSelection(0)
         }, 1000)
+
+
     }
 
     /**
@@ -167,6 +196,25 @@ export default function CustomerPage() {
 
     }
 
+
+    /**
+     * This Method Will search by the selected attribute
+     * author : Roie Ivri
+     * Created At 07/05/2023 13:43
+     */
+    async function advanceSearch(category?: CategoryType, price?: number) {
+        if (category !== undefined) {
+            setdisplayedCoupons(await customerService.getMyCouponsByCategory(204, category))
+
+        } else if (price !== undefined) {
+            setdisplayedCoupons(await customerService.getMyCouponsByMaxPrice(204, price!))
+        }
+
+
+        setpopUpSelection(0);
+    }
+
+
     return (
 
         <>
@@ -176,6 +224,11 @@ export default function CustomerPage() {
                             handleChangeInSearchQuery={handleChangeInSearchQuery}
                             coupons={displayedCoupons}
                             purchaseCoupon={purchaseCoupon}
+                            advanceSearchParameter={advanceSearchParameter}
+                            popUpSelection={popUpSelection}
+                            handleChangeInPopUpSelection={handleChangeInPopUpSelection}
+                            changeAdvanceSearchSelection={changeAdvanceSearchSelection}
+                            advanceSearch={advanceSearch}
             />
 
 

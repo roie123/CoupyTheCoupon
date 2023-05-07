@@ -50,3 +50,25 @@ display: flex;
     font-size: 0.7rem;
     box-shadow: rgb(0, 0, 0) 0px 30px 40px -7px;
 }
+.advance-search-cont{
+    text-align: center;
+    min-width: 80vw;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+}
+.options-cont{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.search-option-cont{
+background-color: black;
+    width: 30%;
+    margin: 1vh 1vh;
+    border-radius: 2vh;
+}
+.search-option-cont p{
+    color:white;
+    text-align: center;
+}

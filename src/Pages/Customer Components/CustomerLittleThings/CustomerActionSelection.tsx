@@ -27,8 +27,8 @@ export default function CustomerActionSelection(props: ActionSelectionProps) {
                     <div className="actions-cont">
                         <ActionCard name={'Purchase Coupon'} onClick={()=>props.handleChangeInDisplayedAction(CustomerActionTypes.PurchaseCoupon)} SvgIcon={ShopIcon}/>
                         <ActionCard name={'Get My Coupons'} onClick={()=>props.handleChangeInDisplayedAction(CustomerActionTypes.GetMyCoupons)} SvgIcon={FormatListBulletedIcon}/>
-                        <ActionCard name={'Get Coupons (By Category)'} onClick={()=>props.handleChangeInDisplayedAction(CustomerActionTypes.GetCouponsByCategory)} SvgIcon={FormatListBulletedIcon}/>
-                        <ActionCard name={'Get Coupons (By Price)'} onClick={()=>props.handleChangeInDisplayedAction(CustomerActionTypes.GetCouponsByPrice)} SvgIcon={FormatListBulletedIcon}/>
+                        {/*<ActionCard name={'Get Coupons (By Category)'} onClick={()=>props.handleChangeInDisplayedAction(CustomerActionTypes.GetCouponsByCategory)} SvgIcon={FormatListBulletedIcon}/>*/}
+                        {/*<ActionCard name={'Get Coupons (By Price)'} onClick={()=>props.handleChangeInDisplayedAction(CustomerActionTypes.GetCouponsByPrice)} SvgIcon={FormatListBulletedIcon}/>*/}
                         <ActionCard name={'Get My Details'} onClick={()=>props.handleChangeInDisplayedAction(CustomerActionTypes.GetMyDetails)} SvgIcon={InfoIcon}/>
 
 

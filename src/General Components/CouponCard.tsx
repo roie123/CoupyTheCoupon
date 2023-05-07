@@ -3,7 +3,8 @@ import {Button} from "@mui/material";
 
 interface CouponCardProps{
 coupon:Coupon
-    clickOnCoupon?(coupon:Coupon):void
+    clickOnCoupon?(coupon:Coupon):void;
+localId:number;
 }
     /**
      * Author - Roie Ivri 
@@ -13,7 +14,7 @@ export default function CouponCard(props:CouponCardProps){
 
 return(
 <>
-            <div key={props.coupon.id} className="coupon-cont">
+            <div key={props.coupon.id} id={props.localId.toString()} className="coupon-cont">
                 <div className="upper-coupon-cont">
 
                     <p className={'c-title'}>{props.coupon.title}</p>
