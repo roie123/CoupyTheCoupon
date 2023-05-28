@@ -12,9 +12,9 @@ export default function HomePage(){
      *  (2) => company
      *  (3) => customer
      */
-    const [displaySelection,setdisplaySelection] =useState<number>(3);
+    const [displaySelection,setdisplaySelection] =useState<number>(1);
     
-
+//Comment for git
     return(
         <>
             {displaySelection===0 ? (null):(null)}
