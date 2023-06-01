@@ -1,10 +1,9 @@
 import {AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography} from "@mui/material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import RedeemIcon from '@mui/icons-material/Redeem';
 import MenuIcon from '@mui/icons-material/Menu';
 import SavingsIcon from '@mui/icons-material/Savings';
-
 export default function NavBar(){
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -109,7 +108,7 @@ export default function NavBar(){
 
     }
 
-
+const pages :string[] = ['sss' , 'ssss'];
 
 
 
@@ -129,18 +128,59 @@ export default function NavBar(){
         setOpenAlert(false);
     };
 
+
+
+
+
+    ///ADMIN LOGIN ACTIVATION
+
+    const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+
+    useEffect(() => {
+        return () => {
+            stopRepeating(); // Clean up the interval when the component unmounts
+        };
+    }, []);
+
+    const startRepeating = () => {
+        if (intervalId) return; // Return if already repeating
+
+        const id = setInterval(() => {
+            // Function to be executed repeatedly
+            console.log('Button pressed repeatedly!');
+        }, 200);
+
+        setIntervalId(id);
+
+        setTimeout(() => {
+            stopRepeating(); // Stop repeating after 3 seconds
+            nav('/admin'); // Redirect to '/admin'
+        }, 3000);
+    };
+
+    const stopRepeating = () => {
+        if (intervalId) {
+            clearInterval(intervalId);
+            setIntervalId(null);
+        }
+    };
+
+
+
+
     return(
         <AppBar sx={{backgroundColor:'black'}} position="sticky">
 
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     {/*This Box is for the Desktop Users */}
-                    <Box sx={{display: 'flex', flexDirection: 'row', gap: '7vh'}}>
-                     <RedeemIcon/>
+                    {/*<Box sx={{display: 'flex', flexDirection: 'row', gap: '7vh'}}>*/}
+                    {/* <RedeemIcon/>*/}
 
 
 
-                    </Box>
+                    {/*</Box>*/}
                     {/*End of the Desktop Section*/}
 
 
@@ -153,13 +193,13 @@ export default function NavBar(){
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            <MenuIcon sx={{color:'black'}}/>
+                            <MenuIcon sx={{color:'white'}}/>
                         </IconButton>
-                        {/*<IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>*/}
-                        {/*    <ShoppingCartIcon/>*/}
-                        {/*</IconButton>*/}
+                        <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
 
-                        {/* for the HAMBURGER ^^ */}
+                        </IconButton>
+
+                         {/*for the HAMBURGER ^^*/}
 
                         <Menu
                             id="menu-appbar"
@@ -183,15 +223,21 @@ export default function NavBar(){
                                 <MenuItem sx={{height: '5vh', alignItems: 'start', minWidth: 'minWidth'}}
                                           onClick={()=>handleCloseUserMenu('')}>
                                     <Typography fontSize={'1.5rem'} textAlign="justify"
-                                                onClick={() => handleClickOnSetting('')}>Hi</Typography>
-                                </MenuItem>
+                                                onClick={() => handleClickOnSetting('/auth')}>Login</Typography>
 
+
+                                </MenuItem>
+                                <MenuItem>
+                                    <Typography fontSize={'1.5rem'} textAlign="justify"
+                                                onClick={() => handleClickOnSetting('/company-auth')}>Enterprise Access</Typography>
+
+                                </MenuItem>
 
                         </Menu>
 
                     </Box>
 
-                    <Button onClick={()=> nav('/')}>
+                    <Button onMouseDown={startRepeating} onMouseUp={stopRepeating}>
                         <Typography
                             variant="h5"
                             noWrap
@@ -203,29 +249,29 @@ export default function NavBar(){
                                 fontFamily: 'monospace',
                                 fontWeight: 700,
                                 letterSpacing: '.3rem',
-                                color: 'black',
+                                color: 'white',
                                 textDecoration: 'none',
                                 marginLeft:'5vw'
                             }}
 
                         >
-                            NEYA
+                            Coupy
 
                         </Typography>
                     </Button>
 
 
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        {/*{pages.map((page) => (*/}
-                        {/*    <Button*/}
-                        {/*        key={page}*/}
-                        {/*        onClick={()=> handleCloseNavMenu(page)}*/}
-                        {/*        sx={{my: 2, display: 'block'}}*/}
+                        {pages.map((page) => (
+                            <Button
+                                key={page}
+                                onClick={()=> handleCloseNavMenu(page)}
+                                sx={{my: 2, display: 'block'}}
 
-                        {/*    >*/}
-                        {/*        {page}*/}
-                        {/*    </Button>*/}
-                        {/*))}*/}
+                            >
+                                {page}
+                            </Button>
+                        ))}
                     </Box>
 
                     <Box sx={{flexGrow: 0}}>
