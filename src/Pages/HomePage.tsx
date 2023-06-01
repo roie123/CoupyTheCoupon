@@ -2,7 +2,7 @@ import {useState} from "react";
 import CompanyPage from "./Company Components/CompanyPage";
 import AdminPage from "./AdminComponents/AdminPage";
 import CustomerPage from "./Customer Components/CustomerPage";
-import AuthenticationPage from "./AuthenticationPage";
+import CustomerLoginPage from "./AuthPages/CustomerLoginPage";
 
 export default function HomePage(){
 
@@ -18,7 +18,7 @@ export default function HomePage(){
 //Comment for git
     return(
         <>
-            {displaySelection===0 ? (<AuthenticationPage/>):(null)}
+            {displaySelection===0 ? (<CustomerLoginPage/>):(null)}
             {displaySelection===1 ? (<AdminPage/>):(null)}
             {displaySelection===2 ? (<CompanyPage/>):null}
             {displaySelection===3 ? (<CustomerPage/>):(null)}

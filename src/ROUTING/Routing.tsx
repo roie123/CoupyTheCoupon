@@ -3,7 +3,8 @@ import HomePage from "../Pages/HomePage";
 import CustomerPage from "../Pages/Customer Components/CustomerPage";
 import CompanyPage from "../Pages/Company Components/CompanyPage";
 import AdminPage from "../Pages/AdminComponents/AdminPage";
-import AuthenticationPage from "../Pages/AuthenticationPage";
+import CustomerLoginPage from "../Pages/AuthPages/CustomerLoginPage";
+import CompanyLogin from "../Pages/AuthPages/CompanyLogin";
 
 interface RoutingConfigProps{
 
@@ -20,9 +21,11 @@ return(
         <Routes>
             <Route path="/" element={<HomePage />}/>
             <Route path="/customer" element={<CustomerPage />}/>
+            <Route path="/customer-auth" element={<CustomerLoginPage />}/>
             <Route path="/company" element={<CompanyPage />}/>
+            <Route path="/company-auth" element={<CompanyLogin />}/>
             <Route path="/admin" element={<AdminPage />}/>
-            <Route path="/auth" element={<AuthenticationPage />}/>
+            <Route path="/auth" element={<CustomerLoginPage />}/>
 
 
         </Routes>

@@ -4,15 +4,14 @@ import {useNavigate} from "react-router-dom";
 import RedeemIcon from '@mui/icons-material/Redeem';
 import MenuIcon from '@mui/icons-material/Menu';
 import SavingsIcon from '@mui/icons-material/Savings';
-export default function NavBar(){
+
+export default function NavBar() {
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
 
-
-    const [currentCartValue,setcurrentCartValue] = useState<string>('');
-
+    const [currentCartValue, setcurrentCartValue] = useState<string>('');
 
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -23,24 +22,17 @@ export default function NavBar(){
     };
 
 
-
-
-
-
-
-
-
-    const handleCloseNavMenu = (page:string) => {
-        switch (page){
-            case 'קצת עלינו' :  {
+    const handleCloseNavMenu = (page: string) => {
+        switch (page) {
+            case 'קצת עלינו' : {
                 setpopUpSelection(1);
                 break;
             }
-            case 'צור קשר' :  {
+            case 'צור קשר' : {
                 setpopUpSelection(2);
                 break;
             }
-            case 'מוצרים אחרים' :  {
+            case 'מוצרים אחרים' : {
                 setpopUpSelection(3);
                 break;
             }
@@ -48,17 +40,17 @@ export default function NavBar(){
         setAnchorElNav(null);
     };
 
-    const handleCloseUserMenu = (page:string) => {
-        switch (page){
-            case 'קצת עלינו' :  {
+    const handleCloseUserMenu = (page: string) => {
+        switch (page) {
+            case 'קצת עלינו' : {
                 setpopUpSelection(1);
                 break;
             }
-            case 'צור קשר' :  {
+            case 'צור קשר' : {
                 setpopUpSelection(2);
                 break;
             }
-            case 'מוצרים אחרים' :  {
+            case 'מוצרים אחרים' : {
                 setpopUpSelection(3);
                 break;
             }
@@ -74,8 +66,7 @@ export default function NavBar(){
      * 2 => the  contactUs popUp
      * 3 => the moreProducts popUp
      */
-    const [popUpSelection,setpopUpSelection] =useState<number>(0);
-
+    const [popUpSelection, setpopUpSelection] = useState<number>(0);
 
 
     /**
@@ -83,23 +74,24 @@ export default function NavBar(){
      * @param setting the target page
      */
     function handleClickOnSetting(setting: string) {
-
+        nav(setting)
 
     }
+
     const nav = useNavigate();
 
 
-    function handleClickOnMenuItem(page:string){
-        switch (page){
-            case 'קצת עלינו' :  {
+    function handleClickOnMenuItem(page: string) {
+        switch (page) {
+            case 'קצת עלינו' : {
                 setpopUpSelection(1);
                 break;
             }
-            case 'צור קשר' :  {
+            case 'צור קשר' : {
                 setpopUpSelection(2);
                 break;
             }
-            case 'מוצרים אחרים' :  {
+            case 'מוצרים אחרים' : {
                 setpopUpSelection(3);
                 break;
             }
@@ -108,9 +100,7 @@ export default function NavBar(){
 
     }
 
-const pages :string[] = ['sss' , 'ssss'];
-
-
+    const pages: string[] = ['sss', 'ssss'];
 
 
     const [openAlert, setOpenAlert] = useState(false);
@@ -127,9 +117,6 @@ const pages :string[] = ['sss' , 'ssss'];
 
         setOpenAlert(false);
     };
-
-
-
 
 
     ///ADMIN LOGIN ACTIVATION
@@ -167,17 +154,14 @@ const pages :string[] = ['sss' , 'ssss'];
     };
 
 
-
-
-    return(
-        <AppBar sx={{backgroundColor:'black'}} position="sticky">
+    return (
+        <AppBar sx={{backgroundColor: 'black'}} position="sticky">
 
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     {/*This Box is for the Desktop Users */}
                     {/*<Box sx={{display: 'flex', flexDirection: 'row', gap: '7vh'}}>*/}
                     {/* <RedeemIcon/>*/}
-
 
 
                     {/*</Box>*/}
@@ -193,13 +177,13 @@ const pages :string[] = ['sss' , 'ssss'];
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            <MenuIcon sx={{color:'white'}}/>
+                            <MenuIcon sx={{color: 'white'}}/>
                         </IconButton>
                         <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
 
                         </IconButton>
 
-                         {/*for the HAMBURGER ^^*/}
+                        {/*for the HAMBURGER ^^*/}
 
                         <Menu
                             id="menu-appbar"
@@ -220,18 +204,19 @@ const pages :string[] = ['sss' , 'ssss'];
                             }}
                         >
 
-                                <MenuItem sx={{height: '5vh', alignItems: 'start', minWidth: 'minWidth'}}
-                                          onClick={()=>handleCloseUserMenu('')}>
-                                    <Typography fontSize={'1.5rem'} textAlign="justify"
-                                                onClick={() => handleClickOnSetting('/auth')}>Login</Typography>
+                            <MenuItem sx={{height: '5vh', alignItems: 'start', minWidth: 'minWidth'}}
+                                      onClick={() => handleCloseUserMenu('')}>
+                                <Typography fontSize={'1.5rem'} textAlign="justify"
+                                            onClick={() => handleClickOnSetting('/customer-auth')}>Login</Typography>
 
 
-                                </MenuItem>
-                                <MenuItem>
-                                    <Typography fontSize={'1.5rem'} textAlign="justify"
-                                                onClick={() => handleClickOnSetting('/company-auth')}>Enterprise Access</Typography>
+                            </MenuItem>
+                            <MenuItem>
+                                <Typography fontSize={'1.5rem'} textAlign="justify"
+                                            onClick={() => handleClickOnSetting('/company-auth')}>Enterprise
+                                    Access</Typography>
 
-                                </MenuItem>
+                            </MenuItem>
 
                         </Menu>
 
@@ -251,7 +236,7 @@ const pages :string[] = ['sss' , 'ssss'];
                                 letterSpacing: '.3rem',
                                 color: 'white',
                                 textDecoration: 'none',
-                                marginLeft:'5vw'
+                                marginLeft: '5vw'
                             }}
 
                         >
@@ -265,7 +250,7 @@ const pages :string[] = ['sss' , 'ssss'];
                         {pages.map((page) => (
                             <Button
                                 key={page}
-                                onClick={()=> handleCloseNavMenu(page)}
+                                onClick={() => handleCloseNavMenu(page)}
                                 sx={{my: 2, display: 'block'}}
 
                             >
@@ -279,8 +264,8 @@ const pages :string[] = ['sss' , 'ssss'];
                         <Tooltip title={currentCartValue}>
 
 
-                            <IconButton sx={{p: 0 ,color:'black'}} >
-                                <SavingsIcon sx={{color:'black'}} />
+                            <IconButton sx={{p: 0, color: 'black'}}>
+                                <SavingsIcon sx={{color: 'black'}}/>
                             </IconButton>
 
 

@@ -26,6 +26,10 @@
     1000%{opacity: 1}
 }
 
+@keyframes welcome-message-closing {
+    0%{    opacity: 1;}
+    100%{opacity: 0; visibility: hidden}
+}
 
 
 
