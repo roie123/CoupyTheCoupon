@@ -4,6 +4,8 @@ import {AuthClientTypes, customerLogin, LoginRequestDTO} from "../../Services/Au
 import {Button, Snackbar} from "@mui/material";
 import './AuthenticationPageStyle.css'
 import SuccesfulLogin from "./SuccesfulLogin";
+import {useNavigate} from "react-router-dom";
+
 interface CustomerLoginPageProps {
 
 }
@@ -26,49 +28,65 @@ export default function CustomerLoginPage(props: CustomerLoginPageProps) {
     const [authSelection, setauthSelection] = useState<number>(0);
     const {register, handleSubmit, watch, formState: {errors}} = useForm<LoginRequestDTO>();
     const [loginResponse, setloginResponse] = useState<string>('');
-    const [userName,setuserName] =useState<string>('');
-
+    const [userName, setuserName] = useState<string>('');
+    const nav = useNavigate();
 
 
     const handleLogin = (data: LoginRequestDTO) => {
         data.clientType = AuthClientTypes.Customer;
         customerLogin(data).then(value => {
-        if (!value){
-            setloginResponse("Login Values Invalid")
-        }
-        else {
-           // console.log((localStorage.getItem('token') as string));
+            console.log(value);
+            if (value === '403') {
+                setloginResponse("Login Values Invalid")
+            }
+            if (value === 'nice') {
 
-            setuserName(localStorage.getItem('userName')!)
-            const authDiv = document.getElementById('auth-cont')!;
-            const welcomeDiv = document.getElementById('logged-in-welcome')!;
-            welcomeDiv.style.visibility='visible'
-            welcomeDiv.style.animationName='welcome-message';
-            welcomeDiv.style.animationDuration='1s'
-            welcomeDiv.style.animationFillMode='forwards'
-            welcomeDiv.style.animationIterationCount='1'
-            authDiv.hidden= true;
-        }
+
+                setuserName(localStorage.getItem('userName')!)
+                const authDiv = document.getElementById('auth-cont')!;
+                const welcomeDiv = document.getElementById('logged-in-welcome')!;
+                welcomeDiv.style.visibility = 'visible'
+                welcomeDiv.style.animationName = 'welcome-message';
+                welcomeDiv.style.animationDuration = '1s'
+                welcomeDiv.style.animationFillMode = 'forwards'
+                welcomeDiv.style.animationIterationCount = '1'
+                authDiv.hidden = true;
+
+            }
         });
-;
-
+        ;
     };
+    useEffect(() => {
+        if (userName.length > 2) {
+            setTimeout(() => {
+                const welcomeDiv = document.getElementById('logged-in-welcome')!;
+                welcomeDiv.style.animationName = 'welcome-message-closing';
+                welcomeDiv.style.animationDuration = '1s'
+                welcomeDiv.style.animationFillMode = 'forwards'
+                welcomeDiv.style.animationIterationCount = '1'
+                // welcomeDiv.style.visibility='hidden'
 
-    useEffect(()=>{
-        if (loginResponse.length>1){
-            setTimeout(()=>{
+                nav('/customer');
+
+            }, 3000)
+        }
+    }, [userName])
+
+    useEffect(() => {
+        if (loginResponse.length > 1) {
+            setTimeout(() => {
                 setloginResponse('')
 
-            },2000)
+            }, 2000)
         }
 
 
-    },[loginResponse])
+    }, [loginResponse])
 
 
     return (
         <>
-     <SuccesfulLogin userName={userName}/>
+            <SuccesfulLogin userName={userName}/>
             <div className="auth-cont" id={'auth-cont'}>
                 <div className="login-cont">
                     <form onSubmit={handleSubmit(handleLogin)}>
