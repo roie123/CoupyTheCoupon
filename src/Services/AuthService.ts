@@ -48,6 +48,36 @@ export async function customerLogin(loginRequest: LoginRequestDTO): Promise<stri
 }
 
 
+export async function clientLogin(loginRequest: LoginRequestDTO , type: AuthClientTypes): Promise<string> {
+    try {
+        loginRequest.clientType=type;
+        const response: AxiosResponse<TokenResponse> = await axios.post<TokenResponse>(`${appConfig.authApiUrl}/login`, loginRequest);
+
+        let shittyToken: TokenResponse = response.data;
+
+
+        let username: string = jwt_decode(shittyToken.token);
+        console.log(response);
+        // @ts-ignore
+        if (username.role === type) {
+            // @ts-ignore
+            localStorage.setItem('userName', username.userName.toString().substring(0, username.userName.toString().indexOf('@')))
+            localStorage.setItem('token', shittyToken.token);
+            store.dispatch(registerAction(shittyToken.token));
+            return 'nice';
+        }
+
+        return 'Wrong Client Type';
+
+    } catch (error: any) {
+        if (error.response && error.response.status === 403) {
+            return error.response.status.toString();
+        }
+        throw error;
+    }
+}
+
+
 
 
 

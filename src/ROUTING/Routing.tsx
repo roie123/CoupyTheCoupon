@@ -21,11 +21,11 @@ return(
         <Routes>
             <Route path="/" element={<HomePage />}/>
             <Route path="/customer" element={<CustomerPage />}/>
-            <Route path="/customer-auth" element={<CustomerLoginPage />}/>
+            {/*<Route path="/customer-auth" element={<CustomerLoginPage />}/>*/}
             <Route path="/company" element={<CompanyPage />}/>
-            <Route path="/company-auth" element={<CompanyLogin />}/>
+            {/*<Route path="/company-auth" element={<CompanyLogin />}/>*/}
             <Route path="/admin" element={<AdminPage />}/>
-            <Route path="/auth" element={<CustomerLoginPage />}/>
+            {/*<Route path="/auth" element={<CustomerLoginPage />}/>*/}
 
 
         </Routes>

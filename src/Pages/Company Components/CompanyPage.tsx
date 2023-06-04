@@ -10,24 +10,36 @@ import {CouponFilterTypes} from "../../Models/Enums/CouponFilterTypes";
 import {CategoryType} from "../../Models/Enums/CategoryType";
 import CompanyDetails from "./Company Dumb Shits/CompanyDetails";
 import {CompanyDTO} from "../../Models/Company";
+import store from "../../Redux/store";
+import CompanyLogin from "../AuthPages/CompanyLogin";
+import {Button} from "@mui/material";
 
 export default function CompanyPage() {
-    const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(0);
-    const [maxPrice,setmaxPrice] =useState<number>(0);
-    const [currentCompany,setcurrentCompany] =useState<CompanyDTO>();
-    useEffect(()=> {
-    setData();
+    const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(-1);
+    const [maxPrice, setmaxPrice] = useState<number>(0);
+    const [currentCompany, setcurrentCompany] = useState<CompanyDTO>();
+    useEffect(() => {
+        setData();
     }, [])
-    
-    async function setData(){
+
+    async function setData() {
         setcurrentCompany(await companyService.getCompanyDetails(330));
     }
+
     console.log(currentCompany);
     const companyService: CompanyService = CompanyService.getInstance();
 
     async function handleCompanyActionSelection(action: CompanyActionTypes) {
 
         switch (action) {
+            case CompanyActionTypes.Login:
+                if (store.getState().authReducer.token?.length !== undefined && store.getState().authReducer.token?.length! > 10) {
+                    setdisplayedActionSelection(0);
+
+                }
+
+                break;
+
             case CompanyActionTypes.AddCoupon:
                 setdisplayedActionSelection(1);
                 console.log("Hi");
@@ -84,18 +96,18 @@ export default function CompanyPage() {
 
         switch (filter) {
             case CouponFilterTypes.None: {
-                const coupons: Coupon[] = await companyService.getCompanyCoupons(330);
+                const coupons: Coupon[] = await companyService.getCompanyCoupons();
                 setcompanyCoupons(coupons);
                 break;
             }
             case CouponFilterTypes.ByMaxPrice: {
-                const coupons: Coupon[] = await companyService.getCompanyCouponsByMaxPrice(330, maxPrice!);
+                const coupons: Coupon[] = await companyService.getCompanyCouponsByMaxPrice(maxPrice!);
                 setcompanyCoupons(coupons);
                 break;
 
             }
             case CouponFilterTypes.ByCategory: {
-                const coupons: Coupon[] = await companyService.getCompanyCouponsByCategory(330, category!);
+                const coupons: Coupon[] = await companyService.getCompanyCouponsByCategory(category!);
                 setcompanyCoupons(coupons);
                 break;
 
@@ -107,36 +119,29 @@ export default function CompanyPage() {
     }
 
 
-
-
     const categories = Object.values(CategoryType);
 
-    async  function handleChangeInSelectedCategory(categoryInString:string){
+    async function handleChangeInSelectedCategory(categoryInString: string) {
         //TODO if redux already has the coupons pull from there
 
-     setcompanyCoupons(await  companyService.getCompanyCouponsByCategory(330,categoryInString))
-
-    }
-    async  function handleChangeInMaxPrice(maxPrice:number){
-        //TODO if redux already has the coupons pull from there
-    console.log("hi");
-      setcompanyCoupons( await companyService.getCompanyCouponsByMaxPrice(330,maxPrice));
+        setcompanyCoupons(await companyService.getCompanyCouponsByCategory(categoryInString))
 
     }
 
+    async function handleChangeInMaxPrice(maxPrice: number) {
+        //TODO if redux already has the coupons pull from there
+        console.log("hi");
+        setcompanyCoupons(await companyService.getCompanyCouponsByMaxPrice(maxPrice));
 
-
-
-
-
-
-
-
+    }
 
 
     ////////////GET COMPANY COUPONS ///////////////////////////
     return (
         <>
+            <CompanyLogin displayedActionSelection={displayedActionSelection}
+                          handleActionSelection={handleCompanyActionSelection}
+            />
             <div className="company-cont">
                 <CompanyActionSelection displayedActionSelection={displayedActionSelection}
                                         handleCompanyActionSelection={handleCompanyActionSelection}/>
@@ -145,13 +150,18 @@ export default function CompanyPage() {
                                       handleActionSelection={handleCompanyActionSelection}/>
                 <CompanyCoupons coupons={companyCoupons} displayedActionSelection={displayedActionSelection}
                                 handleActionSelection={handleCompanyActionSelection}
-                                    handleChangeInSelectedCategory={handleChangeInSelectedCategory}
+                                handleChangeInSelectedCategory={handleChangeInSelectedCategory}
                                 categories={categories}
                                 handleChangeInMaxPrice={handleChangeInMaxPrice}
 
                 />
-                <CompanyDetails   displaySelection={displayedActionSelection} currentCompany={currentCompany}  />
+                <CompanyDetails displaySelection={displayedActionSelection} currentCompany={currentCompany}/>
+                {displayedActionSelection !== 0 && displayedActionSelection !== -1 ?
+                    <Button sx={{backgroundColor: 'black', color: 'white', position: 'absolute', bottom:'20vh'}}
+                            onClick={() => handleCompanyActionSelection(CompanyActionTypes.GoBackToSelection)}>Back</Button>
 
+
+                    : null}
 
             </div>
 

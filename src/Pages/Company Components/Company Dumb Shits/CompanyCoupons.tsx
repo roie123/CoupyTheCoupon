@@ -175,9 +175,7 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
 
                 : null}
 
-            <Button sx={{backgroundColor: 'black', color: 'white'}}
-                    onClick={() => props.handleActionSelection(CompanyActionTypes.GoBackToSelection)}>Back</Button>
-        </>
+     </>
     )
 
 }

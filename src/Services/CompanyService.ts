@@ -20,44 +20,44 @@ async doSomethi(){
 
 }
 
-    async addCoupon(couponToAdd:Coupon,companyId:number):Promise<Coupon>{
-        const  response = await axios.post<Coupon>(`${appConfig.companyApiUrl}/coupon/${companyId}`,
+    async addCoupon(couponToAdd:Coupon):Promise<Coupon>{
+        const  response = await axios.post<Coupon>(`${appConfig.companyApiUrl}/coupon`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
-    async updateCoupon(couponToUpdate:Coupon,couponId:number,companyId:number):Promise<Coupon>{
-        const  response = await axios.put<Coupon>(`${appConfig.companyApiUrl}/coupon/${couponId}/${companyId}`,
+    async updateCoupon(couponToUpdate:Coupon,couponId:number):Promise<Coupon>{
+        const  response = await axios.put<Coupon>(`${appConfig.companyApiUrl}/coupon/${couponId}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
 
-    async deleteCoupon(couponId:number,companyId:number):Promise<Coupon>{
-        const  response = await axios.put<Coupon>(`${appConfig.companyApiUrl}/coupon/${couponId}/${companyId}`,
+    async deleteCoupon(couponId:number):Promise<Coupon>{
+        const  response = await axios.put<Coupon>(`${appConfig.companyApiUrl}/coupon/${couponId}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
-    async getCompanyCoupons(companyId:number):Promise<Coupon[]>{
-        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/${companyId}`,
+    async getCompanyCoupons():Promise<Coupon[]>{
+        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
-    async getCompanyCouponsByCategory(companyId:number,category:CategoryType|string):Promise<Coupon[]>{
-        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/byCat/${companyId}/${category}`,
+    async getCompanyCouponsByCategory(category:CategoryType|string):Promise<Coupon[]>{
+        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/byCat/${category}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
-    async getCompanyCouponsByMaxPrice(companyId:number,maxPrice:number):Promise<Coupon[]>{
-        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/byMaxPrice/${companyId}/${maxPrice}`,
+    async getCompanyCouponsByMaxPrice(maxPrice:number):Promise<Coupon[]>{
+        const  response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons/byMaxPrice/${maxPrice}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 

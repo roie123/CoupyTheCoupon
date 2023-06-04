@@ -1,4 +1,5 @@
 export  enum CompanyActionTypes{
+    Login,
     AddCoupon,
 UpdateCoupon,
 DeleteCoupon,

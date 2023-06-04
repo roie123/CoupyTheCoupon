@@ -1,5 +1,5 @@
 import './CustomerPage.css'
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {CustomerActionTypes} from "../../Models/Enums/CustomerActionTypes";
 import CustomerActionSelection from "./CustomerLittleThings/CustomerActionSelection";
 import PurchaseCoupon from "./CustomerLittleThings/PurchaseCoupon";
@@ -10,10 +10,12 @@ import {Button, Snackbar} from "@mui/material";
 import CustomerCoupons from "./CustomerLittleThings/CustomerCoupons";
 import GetCouponsByAttribute from "./CustomerLittleThings/GetCouponsBy";
 import {CategoryType} from "../../Models/Enums/CategoryType";
+import CustomerLoginPage from "../AuthPages/CustomerLoginPage";
+import store from "../../Redux/store";
 
 export default function CustomerPage() {
 
-    const [displayedAction, setdisplayedAction] = useState<number>(0);
+    const [displayedAction, setdisplayedAction] = useState<number>(-1);
     const [availableCoupons, setavailableCoupons] = useState<Coupon[]>([]);
     const [displayedCoupons, setdisplayedCoupons] = useState<Coupon[]>([]);
     const [searchQuery, setsearchQuery] = useState<string>('');
@@ -25,6 +27,13 @@ export default function CustomerPage() {
 
     const customerService: CustomerService = CustomerService.getInstance();
 
+
+    useEffect(() => {
+        if (store.getState().authReducer.token?.length !== undefined && store.getState().authReducer.token?.length! > 10) {
+            setdisplayedAction(0);
+        }
+
+    }, [])
 
     /**
      * This Method Will change the advanceSearchSelection
@@ -103,6 +112,12 @@ export default function CustomerPage() {
 
     async function handleChangeInDisplayedAction(action: CustomerActionTypes) {
         switch (action) {
+            case CustomerActionTypes.Login: {
+                if (store.getState().authReducer.token?.length !== undefined && store.getState().authReducer.token!.length > 10) {
+                    setdisplayedAction(0);
+                }
+                break
+            }
             case CustomerActionTypes.PurchaseCoupon:
                 if (availableCoupons.length === 0) {
                     await populateAvailableCoupons()
@@ -137,7 +152,7 @@ export default function CustomerPage() {
      * Created At 06/05/2023 20:30
      */
     async function populateCustomerCoupons() {
-        setcustomerCoupons(await customerService.getMyCoupons(204))
+        setcustomerCoupons(await customerService.getMyCoupons())
     }
 
     /**
@@ -159,7 +174,7 @@ export default function CustomerPage() {
      * Created At 06/05/2023 17:53
      */
     function purchaseCoupon(coupon: Coupon) {
-        customerService.purchaseCoupon(coupon.id, 204).then(() => {
+        customerService.purchaseCoupon(coupon.id).then(() => {
             const purchasedCoupon = document.getElementById(coupon.id.toString())!;
             purchasedCoupon.style.animationName = 'purchase'
             purchasedCoupon.style.zIndex = '10'
@@ -204,10 +219,10 @@ export default function CustomerPage() {
      */
     async function advanceSearch(category?: CategoryType, price?: number) {
         if (category !== undefined) {
-            setdisplayedCoupons(await customerService.getMyCouponsByCategory(204, category))
+            setdisplayedCoupons(await customerService.getMyCouponsByCategory( category))
 
         } else if (price !== undefined) {
-            setdisplayedCoupons(await customerService.getMyCouponsByMaxPrice(204, price!))
+            setdisplayedCoupons(await customerService.getMyCouponsByMaxPrice(price!))
         }
 
 
@@ -218,6 +233,9 @@ export default function CustomerPage() {
     return (
 
         <>
+            <CustomerLoginPage handleChangeInDisplayedAction={handleChangeInDisplayedAction}
+                               displayedAction={displayedAction}
+            />
             <CustomerActionSelection displayedAction={displayedAction}
                                      handleChangeInDisplayedAction={handleChangeInDisplayedAction}/>
             <PurchaseCoupon handleChangeInFilterType={handleChangeInFilterType} displayedAction={displayedAction}
@@ -239,9 +257,9 @@ export default function CustomerPage() {
             <GetCouponsByAttribute displayedAction={displayedAction}
                                    handleChangeInPopUpSelection={handleChangeInPopUpSelection}
                                    popUpSelection={popUpSelection}/>
-            {displayedAction !== 0 ?
+            {displayedAction !== 0  && displayedAction !== -1 ?
                 <div className="go-back-cont">
-                    <Button variant={'contained'} sx={{backgroundColor: 'black', width: '13vh', height: '7vh'}}
+                    <Button variant={'contained'} sx={{backgroundColor: 'black', width: '13vh', height: '7vh'}} aria-hidden={displayedAction===-1}
                             onClick={() => handleChangeInDisplayedAction(CustomerActionTypes.GoToSelection)}>Back</Button>
                 </div> : null}
 

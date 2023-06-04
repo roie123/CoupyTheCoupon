@@ -207,13 +207,13 @@ export default function NavBar() {
                             <MenuItem sx={{height: '5vh', alignItems: 'start', minWidth: 'minWidth'}}
                                       onClick={() => handleCloseUserMenu('')}>
                                 <Typography fontSize={'1.5rem'} textAlign="justify"
-                                            onClick={() => handleClickOnSetting('/customer-auth')}>Login</Typography>
+                                            onClick={() => handleClickOnSetting('/customer')}>Login</Typography>
 
 
                             </MenuItem>
                             <MenuItem>
                                 <Typography fontSize={'1.5rem'} textAlign="justify"
-                                            onClick={() => handleClickOnSetting('/company-auth')}>Enterprise
+                                            onClick={() => handleClickOnSetting('/company')}>Enterprise
                                     Access</Typography>
 
                             </MenuItem>

@@ -1,13 +1,15 @@
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {AuthClientTypes, customerLogin, LoginRequestDTO} from "../../Services/AuthService";
-import {Button, Snackbar} from "@mui/material";
+import {AuthClientTypes, clientLogin, LoginRequestDTO} from "../../Services/AuthService";
+import {Box, Button, Snackbar, TextField} from "@mui/material";
 import './AuthenticationPageStyle.css'
-import SuccesfulLogin from "./SuccesfulLogin";
 import {useNavigate} from "react-router-dom";
+import {CustomerActionTypes} from "../../Models/Enums/CustomerActionTypes";
+import SuccesfulLogin from "./SuccesfulLogin";
 
 interface CustomerLoginPageProps {
-
+    displayedAction:number,
+    handleChangeInDisplayedAction(action :CustomerActionTypes):void
 }
 
 interface ErrorMessage {
@@ -34,7 +36,7 @@ export default function CustomerLoginPage(props: CustomerLoginPageProps) {
 
     const handleLogin = (data: LoginRequestDTO) => {
         data.clientType = AuthClientTypes.Customer;
-        customerLogin(data).then(value => {
+        clientLogin(data,AuthClientTypes.Customer).then(value => {
             console.log(value);
             if (value === '403') {
                 setloginResponse("Login Values Invalid")
@@ -51,7 +53,6 @@ export default function CustomerLoginPage(props: CustomerLoginPageProps) {
                 welcomeDiv.style.animationFillMode = 'forwards'
                 welcomeDiv.style.animationIterationCount = '1'
                 authDiv.hidden = true;
-
             }
         });
         ;
@@ -66,7 +67,8 @@ export default function CustomerLoginPage(props: CustomerLoginPageProps) {
                 welcomeDiv.style.animationIterationCount = '1'
                 // welcomeDiv.style.visibility='hidden'
 
-                nav('/customer');
+                // nav('/customer');
+                props.handleChangeInDisplayedAction(CustomerActionTypes.Login);
 
             }, 3000)
         }
@@ -86,18 +88,27 @@ export default function CustomerLoginPage(props: CustomerLoginPageProps) {
 
     return (
         <>
-            <SuccesfulLogin userName={userName}/>
-            <div className="auth-cont" id={'auth-cont'}>
-                <div className="login-cont">
-                    <form onSubmit={handleSubmit(handleLogin)}>
-                        <input type="text" {...register('userName')} />
-                        <input type="password" {...register('password')} />
-                        <Button type={'submit'}>Submit</Button>
-                        <Snackbar open={loginResponse.length > 1} message={loginResponse} autoHideDuration={1000}/>
-                    </form>
+            {props.displayedAction===-1 ? <>
+                <SuccesfulLogin userName={userName}/>
+                <div className="auth-cont" id={'auth-cont'}>
+                    <div className="login-cont">
+                        <form  onSubmit={handleSubmit(handleLogin)}>
+                            <Box sx={{display:'flex' , flexDirection:'column' , gap:'5vh', }}>
+                                <TextField hidden={true} sx={{zIndex:'0'}} label="Email"  type="text" {...register('userName')} />
+                                <TextField  type="password" label="Password" {...register('password')} />
+                                <Button type={'submit'}>Submit</Button>
+
+
+                            </Box>
+
+                            <Snackbar open={loginResponse.length > 1} message={loginResponse} autoHideDuration={1000}/>
+                        </form>
+                    </div>
+
                 </div>
 
-            </div>
+            </> : null }
+
         </>
     )
 }

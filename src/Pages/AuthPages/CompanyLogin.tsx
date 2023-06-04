@@ -1,14 +1,16 @@
-import {Button, Snackbar} from "@mui/material";
+import {Box, Button, Input, Snackbar, TextField} from "@mui/material";
 import {useForm} from "react-hook-form";
-import {AuthClientTypes, customerLogin, LoginRequestDTO} from "../../Services/AuthService";
+import {AuthClientTypes, clientLogin, LoginRequestDTO} from "../../Services/AuthService";
 import {useEffect, useState} from "react";
 import SuccesfulLogin from "./SuccesfulLogin";
-import store from "../../Redux/store";
 import './AuthenticationPageStyle.css'
 import {useNavigate} from "react-router-dom";
+import {CompanyActionTypes} from "../../Models/Enums/CompanyActionTypes";
 
 interface CompanyLoginProps {
+    displayedActionSelection: number,
 
+    handleActionSelection(action: CompanyActionTypes): void
 }
 
 /**
@@ -22,7 +24,7 @@ export default function CompanyLogin(props: CompanyLoginProps) {
     const nav = useNavigate();
     const handleLogin = (data: LoginRequestDTO) => {
         data.clientType = AuthClientTypes.Customer;
-        customerLogin(data).then(value => {
+        clientLogin(data,AuthClientTypes.Company).then(value => {
             if (!value) {
                 setloginResponse("Login Values Invalid")
             } else {
@@ -44,7 +46,7 @@ export default function CompanyLogin(props: CompanyLoginProps) {
     };
 
     useEffect(() => {
-        if (userName.length > 2 ) {
+        if (userName.length > 2) {
             setTimeout(() => {
                 const welcomeDiv = document.getElementById('logged-in-welcome')!;
                 welcomeDiv.style.animationName = 'welcome-message-closing';
@@ -53,25 +55,32 @@ export default function CompanyLogin(props: CompanyLoginProps) {
                 welcomeDiv.style.animationIterationCount = '1'
                 // welcomeDiv.style.visibility='hidden'
 
-                nav('/company');
-
+                // nav('/company');
+                props.handleActionSelection(CompanyActionTypes.Login);
             }, 3000)
         }
     }, [userName])
     return (
         <>
-            <SuccesfulLogin userName={userName}/>
-            <div className="auth-cont" id={'auth-cont'}>
-                <div className="login-cont">
-                    <form onSubmit={handleSubmit(handleLogin)}>
-                        <input type="text" {...register('userName')} />
-                        <input type="password" {...register('password')} />
-                        <Button type={'submit'}>Submit</Button>
-                        <Snackbar open={loginResponse.length > 1} message={loginResponse} autoHideDuration={1000}/>
-                    </form>
-                </div>
+            {props.displayedActionSelection === -1 ? <>             <SuccesfulLogin userName={userName}/>
+                <div className="auth-cont" id={'auth-cont'}>
+                    <div className="login-cont">
+                        <form  onSubmit={handleSubmit(handleLogin)}>
+                            <Box sx={{display:'flex' , flexDirection:'column' , gap:'5vh', }}>
+                                <TextField hidden={true} sx={{zIndex:'0'}} label="Email"  type="text" {...register('userName')} />
+                                <TextField  type="password" label="Password" {...register('password')} />
+                                <Button type={'submit'}>Submit</Button>
 
-            </div>
+
+                            </Box>
+
+                            <Snackbar open={loginResponse.length > 1} message={loginResponse} autoHideDuration={1000}/>
+                        </form>
+                    </div>
+
+                </div>
+            </> : null}
+
         </>
     )
 }

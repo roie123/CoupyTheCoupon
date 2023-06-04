@@ -18,44 +18,46 @@ export class CustomerService {
         return CustomerService.instance;
     }
 
-    async purchaseCoupon(couponId: number, customerId: number): Promise<Coupon> {
+    async purchaseCoupon(couponId: number): Promise<number> {
+        console.log(couponId);
         try {
-            const response: AxiosResponse<Coupon> = await axios.put(
-                `${appConfig.customerApiUrl}/purchaseCoupon/${couponId}/${customerId}`,
+            const response: AxiosResponse<number> = await axios.put(
+                `http://localhost:8080/api/customer/purchaseCoupon/${couponId}`,null,
+                {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}}
             );
-            return response.data as Coupon;
+            return response.data as number ;
         } catch (error: unknown) {
-            console.error(`Failed to purchase coupon ${couponId} for customer ${customerId}:`, error);
+            console.error(error);
             throw error;
         }
     }
-
-    async getMyCoupons(customerId: number): Promise<Coupon[]> {
-        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons/${customerId}`,
+    //    @PutMapping("/purchaseCoupon/{couponId}")
+    async getMyCoupons(): Promise<Coupon[]> {
+        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
 
-    async getMyCouponsByCategory(customerId: number, category: CategoryType): Promise<Coupon[]> {
-        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons/byCat/${customerId}/${category}`,
+    async getMyCouponsByCategory( category: CategoryType): Promise<Coupon[]> {
+        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons/byCat/${category}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
 
-    async getMyCouponsByMaxPrice(customerId: number, max: number): Promise<Coupon[]> {
-        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons/byCat/${customerId}/${max}`,
+    async getMyCouponsByMaxPrice(max: number): Promise<Coupon[]> {
+        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons/byMax/${max}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
 
     }
 
-    async getMyDetails(customerId: number): Promise<Customer> {
-        const response = await axios.get<Customer>(`${appConfig.adminApiUrl}/customer/${customerId}`,
+    async getMyDetails(): Promise<Customer> {
+        const response = await axios.get<Customer>(`${appConfig.adminApiUrl}/customer`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
@@ -65,7 +67,8 @@ export class CustomerService {
 //    /coupons/available
 
     async getMyAvailableCoupons(): Promise<Coupon[]> {
-        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons/available`);
+        const response = await axios.get<Coupon[]>(`${appConfig.customerApiUrl}/coupons/available`,
+            {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         console.log(response);
         return response.data;
 

@@ -8,6 +8,7 @@
     justify-content: center;
     align-items: center;
     visibility: hidden;
+    z-index: 10;
 
 }
 .user-name-welcome{
@@ -30,6 +31,56 @@
     0%{    opacity: 1;}
     100%{opacity: 0; visibility: hidden}
 }
+
+
+
+
+
+.auth-cont{
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-cont{
+    display: flex;
+
+}
+.login-cont form{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    height: 40vh;
+    gap: 10vh;
+}
+.login-cont input{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
