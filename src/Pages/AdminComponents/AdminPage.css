@@ -2,6 +2,7 @@
     height: 100%;
     overflow: hidden;
     padding: 2vh;
+
 }
 .admin-top-cont{
 margin-top: 2vh;
@@ -19,7 +20,7 @@ input {
 }
 .add-new-company-form{
 
-    height: 50svh;
+    height: 70svh;
     display: flex;
     flex-direction: column;
     align-items: center;

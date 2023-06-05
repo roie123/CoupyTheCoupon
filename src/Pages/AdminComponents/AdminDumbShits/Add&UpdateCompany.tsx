@@ -1,4 +1,4 @@
-import {Button} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 import {SubmitErrorHandler, SubmitHandler, useForm} from "react-hook-form";
 import {CompanyDTO} from "../../../Models/Company";
 import {AdminActionTypes} from "../AdminActionTypes";
@@ -22,10 +22,11 @@ export default function (props:AddUpdateCompanyProps){
         <>
             {props.displayedActionSelection === 1 || props.displayedActionSelection === 2 ? <>
                 <form onSubmit={handleSubmit((e) => props.onSubmitFormCompany(e))} className={'add-new-company-form'}>
-                    <input placeholder={'Company Name'} {...register("name")} required={true}/>
-                    <input placeholder={'Company email'} {...register("email")} required={true}/>
+                    <TextField label={'Company Name'} placeholder={'Company Name'}  {...register("name")} required={true}/>
+                    <TextField   label={'Company Email'} {...register("email")} required={true}/>
+                    <TextField   label={'Company Password'} {...register("password")} required={true}/>
                     {props.displayedActionSelection === 2 ?
-                        <input placeholder={'Company id'} {...register("id")} required={true}/> : null}
+                        <TextField type={'number'} placeholder={'Company id'} {...register("id")} required={true}/> : null}
                     <Button type={'submit'} sx={{backgroundColor: 'black', color: 'white'}}>Add New </Button>
                     <Button sx={{backgroundColor: 'black', color: 'white'}}
                             onClick={() => props.handleActionSelection(AdminActionTypes.GoToActionsSelection)}>Back</Button>

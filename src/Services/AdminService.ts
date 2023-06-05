@@ -3,6 +3,9 @@ import axios from "axios";
 import appConfig from "../Config/Config";
 import {Customer} from "../Models/Customer";
 import store from "../Redux/store";
+import {throws} from "assert";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 export class AdminService {
     private static instance: AdminService;
@@ -18,7 +21,11 @@ export class AdminService {
 
     async addCompany(companyToAdd: CompanyDTO): Promise<CompanyDTO> {
         const response = await axios.post<CompanyDTO>(appConfig.adminApiUrl, companyToAdd,
-            {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
+            {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}}).then(value => {
+                return value;
+        }).catch(error => {
+            throw error
+        });
 
         return response.data;
 
@@ -39,10 +46,14 @@ export class AdminService {
 
     }
 
-    async getAllCompanies(): Promise<CompanyDTO[]> {
-        const response = await axios.get<CompanyDTO[]>(`${appConfig.adminApiUrl}/companies`,
-            {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
-        return response.data;
+    async getAllCompanies(page: number, size:number): Promise<CompanyDTO[]> {
+        const response = await axios.get<CompanyDTO[]>(`${appConfig.adminApiUrl}/companies/${page}/${size}`,
+            {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}})
+            .catch(error=> {
+                throw  error;
+            });
+        // @ts-ignore
+        return response.data.content;
 
 
     }
@@ -55,9 +66,14 @@ export class AdminService {
 
     }
 
-    async addCustomer(customerToAdd: Customer): Promise<Customer> {
-        const response = await axios.post<Customer>(`${appConfig.adminApiUrl}/customer`, customerToAdd,
-            {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
+    async addCustomer(customerToAdd: Customer): Promise<number> {
+        console.log(`${appConfig.adminApiUrl}/customer`);
+        const response = await axios.post<number>(`${appConfig.adminApiUrl}/customer`, customerToAdd,
+            {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}})
+            .catch(error => {
+                throw error;
+        });
+
         return response.data;
 
     }

@@ -12,7 +12,7 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ActionCard from "../../General Components/ActionCard";
 import {useEffect, useState} from "react";
 import ActionsSelection from "./AdminDumbShits/ActionsSelection";
-import {Button, containerClasses, switchClasses} from "@mui/material";
+import {Button, containerClasses, Snackbar, switchClasses} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {CompanyDTO} from "../../Models/Company";
 import {AdminActionTypes} from "./AdminActionTypes";
@@ -24,12 +24,29 @@ import {Customer} from "../../Models/Customer";
 import AddUpdateCustomer from "./AdminDumbShits/AddUpdateCustomer";
 import ShowAllCustomers from "./AdminDumbShits/ShowAllCustomers";
 import ShowSingleCustomer from "./AdminDumbShits/ShowSingleCustomer";
+import AdminLogin from "../AuthPages/AdminLogin";
 
 
 export default function AdminPage() {
 
 
-    const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(0);
+    const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(-1);
+    const [popUpSelection, setpopUpSelection] = useState<number>(0);
+    const [userMessage, setuserMessage] = useState<string>("s");
+    const [currentGetAllCompaniesPAge, setcurrentGetAllCompaniesPAge] = useState<number>(1);
+
+
+    function handleChangeINPopup(change: number) {
+        switch (change) {
+            case 1: {
+                setuserMessage("Company Added Successfully")
+                setpopUpSelection(1);
+            }
+
+
+        }
+    }
+
 
     const {register, handleSubmit, watch, formState: {errors}} = useForm<CompanyDTO>();
 
@@ -39,7 +56,16 @@ export default function AdminPage() {
 
         switch (displayedActionSelection) {
             case 1: {
-                await adminService.addCompany(data);
+                const response = await adminService.addCompany(data).then(value => {
+                    setuserMessage("Company Added Successfully")
+                    setpopUpSelection(1);
+
+                }).catch(e => {
+                    setuserMessage("Company Cannot be Added")
+                    setpopUpSelection(1);
+                });
+
+
                 break;
             }
             case 2: {
@@ -58,7 +84,7 @@ export default function AdminPage() {
 
     }
 
-   async function handleActionSelection(action: AdminActionTypes) {
+    async function handleActionSelection(action: AdminActionTypes) {
 
         switch (action) {
             case AdminActionTypes.AddCompany:
@@ -73,7 +99,7 @@ export default function AdminPage() {
 
                 break;
             case AdminActionTypes.GetAllCompanies:
-               await getCompanyList();
+                await getCompanyList();
                 setdisplayedActionSelection(4);
 
                 break;
@@ -94,7 +120,7 @@ export default function AdminPage() {
 
                 break;
             case AdminActionTypes.GetAllCustomers:
-              await  getAllCustomers();
+                await getAllCustomers();
                 setdisplayedActionSelection(9);
                 break;
             case AdminActionTypes.GetSingleCustomer:
@@ -112,7 +138,10 @@ export default function AdminPage() {
     const [companyList, setcompanyList] = useState<CompanyDTO[]>([]);
 
     async function getCompanyList() {
-        setcompanyList(await adminService.getAllCompanies());
+        const companiesUnFiltered = (await adminService.getAllCompanies(currentGetAllCompaniesPAge, 6));
+        console.log(companiesUnFiltered);
+
+        setcompanyList(companiesUnFiltered);
     }
 
 
@@ -126,7 +155,7 @@ export default function AdminPage() {
 
         let company: CompanyDTO = await adminService.getSingleCompany(data.id);
         setselectedCompanyById(company);
-        console.log(company.couponList);
+
 
     }
 
@@ -135,19 +164,19 @@ export default function AdminPage() {
 
 
 ////////////////////////////////////////GET ALL CUSTOMERS LOGIC /////////////////////////////////////////////
-    const [customers,setcustomers] =useState<Customer[]>();
+    const [customers, setcustomers] = useState<Customer[]>();
 
-    async function getAllCustomers(){
+    async function getAllCustomers() {
 
-setcustomers(await  adminService.getAllCustomers())
+        setcustomers(await adminService.getAllCustomers())
     }
-    ////////////////////////////////////////GET ALL CUSTOMERS LOGIC /////////////////////////////////////////////
 
+    ////////////////////////////////////////GET ALL CUSTOMERS LOGIC /////////////////////////////////////////////
 
 
     ////////////////////////////GET SINGLE CUSTOMER BY ID////////////////////////////////////////////////
 
-    const [selectedCustomerById,setselectedCustomerById] =useState<Customer>();
+    const [selectedCustomerById, setselectedCustomerById] = useState<Customer>();
 
     async function submitSearchForCustomerById(data: Customer) {
 
@@ -156,16 +185,32 @@ setcustomers(await  adminService.getAllCustomers())
 
     }
 
+    async function changeAllCompaniesViewPage(page: number) {
+        setcurrentGetAllCompaniesPAge(page);
+
+        const companiesUnFiltered = (await adminService.getAllCompanies(page, 6));
+        setcompanyList(companiesUnFiltered)
+
+    }
 
     ////////////////////////////GET SINGLE CUSTOMER BY ID////////////////////////////////////////////////
+
+    useEffect(() => {
+        setTimeout(() => {
+            setpopUpSelection(0);
+        }, 2000)
+    }, [userMessage])
 
 
     return (
         <>
             <div className="admin-cont">
-                <div className="admin-top-cont">
-                    <h4 className={'admin-title'}>Hi Admin, What would You Like To Do</h4>
-                </div>
+                {displayedActionSelection === -1 ? <AdminLogin displayedActionSelection={displayedActionSelection}
+                                                               handleActionSelection={handleActionSelection}/> :
+                    <div className="admin-top-cont">
+                        <h4 className={'admin-title'}>Hi Admin, What would You Like To Do</h4>
+                    </div>}
+
                 {displayedActionSelection === 0 ?
                     <ActionsSelection handleActionSelection={handleActionSelection}/> : null}
 
@@ -173,7 +218,9 @@ setcustomers(await  adminService.getAllCustomers())
                 <AddUpdateCompany displayedActionSelection={displayedActionSelection}
                                   handleActionSelection={handleActionSelection}
                                   onSubmitFormCompany={onSubmitFormCompany} handleSubmit={handleSubmit}/>
-                <ShowAllCompanies companyList={companyList} displayedActionSelection={displayedActionSelection}
+                <ShowAllCompanies changeAllCompaniesViewPage={changeAllCompaniesViewPage}
+                                  currnetPage={currentGetAllCompaniesPAge} companyList={companyList}
+                                  displayedActionSelection={displayedActionSelection}
                                   handleActionSelection={handleActionSelection}/>
 
 
@@ -182,9 +229,17 @@ setcustomers(await  adminService.getAllCustomers())
                                    selectedCompanyById={selectedCompanyById}
                                    submitSearchForCompanyById={submitSearchForCompanyById}/>
 
-                <AddUpdateCustomer adminService={adminService} handleActionSelection={handleActionSelection} displayedActionSelection={displayedActionSelection}/>
-                <ShowAllCustomers customers={customers!} handleActionSelection={handleActionSelection} displayedActionSelection={displayedActionSelection}/>
-                <ShowSingleCustomer displayedActionSelection={displayedActionSelection} submitSearchForCustomerById={submitSearchForCustomerById} handleActionSelection={handleActionSelection} selectedCustomerById={selectedCustomerById!}/>
+                <AddUpdateCustomer adminService={adminService} handleActionSelection={handleActionSelection}
+                                   displayedActionSelection={displayedActionSelection}/>
+                <ShowAllCustomers customers={customers!} handleActionSelection={handleActionSelection}
+                                  displayedActionSelection={displayedActionSelection}/>
+                <ShowSingleCustomer displayedActionSelection={displayedActionSelection}
+                                    submitSearchForCustomerById={submitSearchForCustomerById}
+                                    handleActionSelection={handleActionSelection}
+                                    selectedCustomerById={selectedCustomerById!}/>
+                <Snackbar sx={{position: 'absolute', bottom: '2vh'}} open={popUpSelection !== 0}
+                          message={userMessage!}/>
+
             </div>
         </>
     )

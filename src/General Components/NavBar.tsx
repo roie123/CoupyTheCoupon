@@ -23,7 +23,6 @@ export default function NavBar() {
 
 
     const handleCloseNavMenu = (page: string) => {
-        console.log(page);
         switch (page) {
             case 'Login': {
                 nav('/customer')
@@ -134,7 +133,6 @@ export default function NavBar() {
 
         const id = setInterval(() => {
             // Function to be executed repeatedly
-            console.log('Button pressed repeatedly!');
         }, 200);
 
         setIntervalId(id);
@@ -221,28 +219,6 @@ export default function NavBar() {
 
                     </Box>
 
-                    <Button onMouseDown={startRepeating} onMouseUp={stopRepeating}>
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component="a"
-                            sx={{
-                                mr: 2,
-                                display: {xs: 'flex', md: 'none'},
-                                flexGrow: 1,
-                                fontFamily: 'monospace',
-                                fontWeight: 700,
-                                letterSpacing: '.3rem',
-                                color: 'white',
-                                textDecoration: 'none',
-                                marginLeft: '5vw'
-                            }}
-
-                        >
-                            Coupy
-
-                        </Typography>
-                    </Button>
 
 
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
@@ -263,7 +239,7 @@ export default function NavBar() {
                         <Tooltip title={currentCartValue}>
 
 
-                            <IconButton sx={{p: 0, color: 'black'}}>
+                            <IconButton  onMouseDown={startRepeating} onMouseUp={stopRepeating} sx={{p: 0, color: 'black'}}>
                                 <Typography sx={{color: 'white' , fontSize:'1.4rem'}}>Coupy</Typography>
                             </IconButton>
 

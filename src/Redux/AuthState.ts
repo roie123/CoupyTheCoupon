@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import { createStore } from "redux";
+import {AuthClientTypes} from "../Services/AuthService";
 
 export interface UserModel {
     firstName: string;
@@ -11,6 +11,7 @@ export class AuthState {
 
     user: UserModel | null = null;
     token: string | null = null;
+    clientType:AuthClientTypes=AuthClientTypes.Customer
 
     constructor() {
         const token: string | null = localStorage.getItem("token");

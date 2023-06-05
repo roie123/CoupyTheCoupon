@@ -26,6 +26,7 @@ export default function CompanyPage() {
     }, [])
 
     async function setData() {
+
         setcurrentCompany(await companyService.getCompanyDetails());
     }
 

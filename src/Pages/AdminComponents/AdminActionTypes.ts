@@ -1,4 +1,5 @@
 export enum AdminActionTypes{
+    Login,
     AddCompany,
 UpdateCompany,
     DeleteCompany,
