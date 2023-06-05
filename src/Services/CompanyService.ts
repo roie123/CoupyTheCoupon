@@ -20,8 +20,8 @@ async doSomethi(){
 
 }
 
-    async addCoupon(couponToAdd:Coupon):Promise<Coupon>{
-        const  response = await axios.post<Coupon>(`${appConfig.companyApiUrl}/coupon`,
+    async addCoupon(couponToAdd:Coupon):Promise<number>{
+        const  response = await axios.post<number>(`${appConfig.companyApiUrl}/coupon`,couponToAdd,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
@@ -64,8 +64,8 @@ async doSomethi(){
 
     }
 
-    async getCompanyDetails(companyId:number):Promise<CompanyDTO>{
-        const  response = await axios.get<CompanyDTO>(`${appConfig.adminApiUrl}/getCompanyById/${companyId}`,
+    async getCompanyDetails():Promise<CompanyDTO>{
+        const  response = await axios.get<CompanyDTO>(`${appConfig.companyApiUrl}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 

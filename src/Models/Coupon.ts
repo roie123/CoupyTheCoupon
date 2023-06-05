@@ -2,7 +2,7 @@ import {CategoryType} from "./Enums/CategoryType";
 
 
 export class Coupon{
-    id:number=0;
+    id?:number=0;
     title:string='';
     description:string='';
     startDate:Date=Date.prototype;

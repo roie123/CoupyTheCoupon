@@ -24,6 +24,7 @@ interface PurchaseCouponProps {
 
     handleChangeInPopUpSelection(selection: number): void;
     advanceSearch(category? : CategoryType , price?:number ):void;
+
 }
 
 /**
@@ -76,7 +77,7 @@ const [maxPrice,setmaxPrice] =useState<number>(0);
 
                         <div className="coupon-list-cont">
                             {props.coupons.map(coupon => (
-                                <CouponCard coupon={coupon} key={coupon.id} localId={coupon.id} clickOnCoupon={() => props.purchaseCoupon(coupon)}/>
+                                <CouponCard coupon={coupon} key={coupon.id} localId={coupon.id!} clickOnCoupon={() => props.purchaseCoupon(coupon)}/>
                             ))
                             }
                         </div>

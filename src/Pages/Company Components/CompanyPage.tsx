@@ -18,15 +18,18 @@ export default function CompanyPage() {
     const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(-1);
     const [maxPrice, setmaxPrice] = useState<number>(0);
     const [currentCompany, setcurrentCompany] = useState<CompanyDTO>();
+    const [popUpSelection, setpopUpSelection] = useState<number>(0);
+
+
     useEffect(() => {
         setData();
     }, [])
 
     async function setData() {
-        setcurrentCompany(await companyService.getCompanyDetails(330));
+        setcurrentCompany(await companyService.getCompanyDetails());
     }
 
-    console.log(currentCompany);
+
     const companyService: CompanyService = CompanyService.getInstance();
 
     async function handleCompanyActionSelection(action: CompanyActionTypes) {
@@ -69,6 +72,7 @@ export default function CompanyPage() {
                 break;
             case CompanyActionTypes.GoBackToSelection:
                 setdisplayedActionSelection(0);
+                setpopUpSelection(0);
                 break;
 
         }
@@ -79,7 +83,44 @@ export default function CompanyPage() {
     ///COMPANY COUPONS LOGIC ///////////////////////////
 
 
-    function onSubmitFormCoupon(data: Coupon) {
+    async function onSubmitFormCoupon(data: Coupon) {
+        console.log(data);
+        let c: Coupon = {
+            amount: data.amount,
+            category: data.category,
+            description: data.description,
+            endDate: data.endDate,
+            image: data.image,
+            price: data.price,
+            startDate: data.startDate,
+            title: data.title
+
+        }
+        console.log(c);
+        const response = await companyService.addCoupon(c).then(value =>{
+                handleChangeInPopupSelection(1);
+                // handleCompanyActionSelection(CompanyActionTypes.GoBackToSelection);
+
+
+            }
+            );
+
+    }
+
+    function handleChangeInPopupSelection(id:number) {
+        switch (id){
+            case 1:{
+                setpopUpSelection(id);
+                break;
+            }
+
+
+            case 0:{
+                setpopUpSelection(id);
+                break;
+            }
+        }
+
 
     }
 
@@ -145,7 +186,7 @@ export default function CompanyPage() {
             <div className="company-cont">
                 <CompanyActionSelection displayedActionSelection={displayedActionSelection}
                                         handleCompanyActionSelection={handleCompanyActionSelection}/>
-                <CompanyCouponActions onSubmitFormCompany={onSubmitFormCoupon}
+                <CompanyCouponActions onSubmitFormCompany={onSubmitFormCoupon} popUpSelection={popUpSelection} handleChangeInPopupSelection={handleChangeInPopupSelection}
                                       displayedActionSelection={displayedActionSelection}
                                       handleActionSelection={handleCompanyActionSelection}/>
                 <CompanyCoupons coupons={companyCoupons} displayedActionSelection={displayedActionSelection}
@@ -155,9 +196,15 @@ export default function CompanyPage() {
                                 handleChangeInMaxPrice={handleChangeInMaxPrice}
 
                 />
-                <CompanyDetails displaySelection={displayedActionSelection} currentCompany={currentCompany}/>
+                {displayedActionSelection === 7 ?
+                    <CompanyDetails displaySelection={displayedActionSelection} currentCompany={currentCompany!}/>
+                :null}
+
+
+
+
                 {displayedActionSelection !== 0 && displayedActionSelection !== -1 ?
-                    <Button sx={{backgroundColor: 'black', color: 'white', position: 'absolute', bottom:'20vh'}}
+                    <Button sx={{backgroundColor: 'black', color: 'white', position: 'absolute', bottom: '20vh'}}
                             onClick={() => handleCompanyActionSelection(CompanyActionTypes.GoBackToSelection)}>Back</Button>
 
 

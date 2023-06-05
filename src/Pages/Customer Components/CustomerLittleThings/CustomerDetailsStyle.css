@@ -1,0 +1,23 @@
+.customer-details-cont{
+    padding: 3vh;
+    margin: 10vh auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5vh
+}
+
+.detail{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+
+.att{
+    font-size: 1.2rem;
+    font-weight: bolder;
+}
+.value{
+    opacity: 0.9;
+}

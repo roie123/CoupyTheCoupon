@@ -57,7 +57,7 @@ export class CustomerService {
     }
 
     async getMyDetails(): Promise<Customer> {
-        const response = await axios.get<Customer>(`${appConfig.adminApiUrl}/customer`,
+        const response = await axios.get<Customer>(`${appConfig.customerApiUrl}`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
         return response.data;
 
@@ -79,7 +79,7 @@ export class CustomerService {
     public sortCoupons(coupons: Coupon[], filter: CouponSearchFilterTypes) {
         switch (filter) {
             case CouponSearchFilterTypes.byId:
-                return [...coupons.sort((a, b) => a.id - b.id)];
+                return [...coupons.sort((a, b) => a.id! - b.id!)];
                 break;
             case CouponSearchFilterTypes.byPrice:
                 return [...coupons.sort((a, b) => a.price - b.price)];

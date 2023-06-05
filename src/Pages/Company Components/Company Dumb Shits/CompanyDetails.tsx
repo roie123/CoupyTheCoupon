@@ -1,8 +1,8 @@
 import {CompanyDTO} from "../../../Models/Company";
-
+import '../../Customer Components/CustomerLittleThings/CustomerDetailsStyle.css'
 interface CompanyDetailsProps{
     displaySelection:number,
-    currentCompany?:CompanyDTO
+    currentCompany:CompanyDTO
 }
     /**
      * Author - Roie Ivri 
@@ -14,43 +14,31 @@ export default function CompanyDetails(props:CompanyDetailsProps){
 
 return(
 <>
-    {props.displaySelection===7 ?
-        <div className="company-details-cont">
 
-            <div className="company-details">
-                <h5>My Company's Name :<span> {props.currentCompany?.name}</span></h5>
-                <h5>My Company's Email : <span>{props.currentCompany?.email}</span> </h5>
+
+            <div className="customer-details-cont">
+
+                <div className="detail">
+                    <span className="att">First Name</span>
+                    <span className="value">{props.currentCompany?.name}</span>
+                </div>
+                <div className="detail">
+                    <span className="att">Last Name</span>
+                    <span className="value">{props.currentCompany?.email}</span>
+                </div>
+
+
+
+
             </div>
 
-            <div className="coupon-list-cont">
-                <h4>My Coupons</h4>
-
-                {props.currentCompany?.couponList.map(coupon => (
-                    <div key={coupon.id} className="coupon-cont">
-                        <div className="upper-coupon-cont">
-                            <p className={'c-title'}>{coupon.title}</p>
-                            <p className={'c-desc'}>{coupon.description}</p>
-                        </div>
-                        <div className="bottom-coupon-cont">
-                            <p className={'c-amount'}>Amount Left : <span>{coupon.amount}</span></p>
-                            <p className={'c-price'}>Price
-                                : <span>{coupon.price}<span>&#8362;</span></span></p>
-                            <p className={'c-exp'}>EXP
-                                : {coupon.startDate.toString()} until {coupon.endDate.toString()}</p>
-
-                        </div>
-                    </div>
-                ))
-                }
-            </div>
-
-        </div>
 
 
 
 
 
-    : null}
+
+
 
 </>
 )

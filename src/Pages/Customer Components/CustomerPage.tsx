@@ -1,5 +1,5 @@
 import './CustomerPage.css'
-import {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import {CustomerActionTypes} from "../../Models/Enums/CustomerActionTypes";
 import CustomerActionSelection from "./CustomerLittleThings/CustomerActionSelection";
 import PurchaseCoupon from "./CustomerLittleThings/PurchaseCoupon";
@@ -12,6 +12,11 @@ import GetCouponsByAttribute from "./CustomerLittleThings/GetCouponsBy";
 import {CategoryType} from "../../Models/Enums/CategoryType";
 import CustomerLoginPage from "../AuthPages/CustomerLoginPage";
 import store from "../../Redux/store";
+import CustomerDetails, {CustomerDetailsProps} from "./CustomerLittleThings/CustomerDetails";
+import {Customer} from "../../Models/Customer";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
+import {lazy, Suspense} from 'react';
 
 export default function CustomerPage() {
 
@@ -174,8 +179,8 @@ export default function CustomerPage() {
      * Created At 06/05/2023 17:53
      */
     function purchaseCoupon(coupon: Coupon) {
-        customerService.purchaseCoupon(coupon.id).then(() => {
-            const purchasedCoupon = document.getElementById(coupon.id.toString())!;
+        customerService.purchaseCoupon(coupon.id!).then(() => {
+            const purchasedCoupon = document.getElementById(coupon.id!.toString())!;
             purchasedCoupon.style.animationName = 'purchase'
             purchasedCoupon.style.zIndex = '10'
             purchasedCoupon.style.animationIterationCount = '1';
@@ -219,7 +224,7 @@ export default function CustomerPage() {
      */
     async function advanceSearch(category?: CategoryType, price?: number) {
         if (category !== undefined) {
-            setdisplayedCoupons(await customerService.getMyCouponsByCategory( category))
+            setdisplayedCoupons(await customerService.getMyCouponsByCategory(category))
 
         } else if (price !== undefined) {
             setdisplayedCoupons(await customerService.getMyCouponsByMaxPrice(price!))
@@ -229,15 +234,29 @@ export default function CustomerPage() {
         setpopUpSelection(0);
     }
 
+    async function handleCallForCustomerDetails(): Promise<Customer> {
+        try {
+            const value = await customerService.getMyDetails();
+            return value;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    const CustomerDetailsLazy = React.lazy(() => import('./CustomerLittleThings/CustomerDetails'));
+    const PurchaseCouponLazy = React.lazy(() => import('./CustomerLittleThings/PurchaseCoupon'));
+
 
     return (
 
         <>
+
             <CustomerLoginPage handleChangeInDisplayedAction={handleChangeInDisplayedAction}
                                displayedAction={displayedAction}
             />
             <CustomerActionSelection displayedAction={displayedAction}
                                      handleChangeInDisplayedAction={handleChangeInDisplayedAction}/>
+
             <PurchaseCoupon handleChangeInFilterType={handleChangeInFilterType} displayedAction={displayedAction}
                             handleChangeInSearchQuery={handleChangeInSearchQuery}
                             coupons={displayedCoupons}
@@ -254,14 +273,30 @@ export default function CustomerPage() {
 
             />
 
+
+
             <GetCouponsByAttribute displayedAction={displayedAction}
                                    handleChangeInPopUpSelection={handleChangeInPopUpSelection}
                                    popUpSelection={popUpSelection}/>
-            {displayedAction !== 0  && displayedAction !== -1 ?
+            {displayedAction !== 0 && displayedAction !== -1 ?
                 <div className="go-back-cont">
-                    <Button variant={'contained'} sx={{backgroundColor: 'black', width: '13vh', height: '7vh'}} aria-hidden={displayedAction===-1}
+                    <Button variant={'contained'} sx={{backgroundColor: 'black', width: '13vh', height: '7vh'}}
+                            aria-hidden={displayedAction === -1}
                             onClick={() => handleChangeInDisplayedAction(CustomerActionTypes.GoToSelection)}>Back</Button>
                 </div> : null}
+
+
+
+
+
+            {displayedAction === 5 ? <Suspense fallback={<div>Loading...</div>}>
+                <CustomerDetailsLazy displayedAction={displayedAction}
+                                     handleCallForCustomerDetails={handleCallForCustomerDetails}/>
+
+            </Suspense> :null}
+
+
+
 
 
             <Snackbar

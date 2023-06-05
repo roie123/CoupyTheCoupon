@@ -23,19 +23,18 @@ export default function NavBar() {
 
 
     const handleCloseNavMenu = (page: string) => {
+        console.log(page);
         switch (page) {
-            case 'קצת עלינו' : {
-                setpopUpSelection(1);
+            case 'Login': {
+                nav('/customer')
                 break;
             }
-            case 'צור קשר' : {
-                setpopUpSelection(2);
+
+            case 'Enterprise Access':{
+                nav('/company')
                 break;
             }
-            case 'מוצרים אחרים' : {
-                setpopUpSelection(3);
-                break;
-            }
+
         }
         setAnchorElNav(null);
     };
@@ -100,7 +99,7 @@ export default function NavBar() {
 
     }
 
-    const pages: string[] = ['sss', 'ssss'];
+    const pages: string[] = ['Login', 'Enterprise Access'];
 
 
     const [openAlert, setOpenAlert] = useState(false);
@@ -155,9 +154,9 @@ export default function NavBar() {
 
 
     return (
-        <AppBar sx={{backgroundColor: 'black'}} position="sticky">
+        <AppBar sx={{backgroundColor: 'black'  ,overflow:'hidden'}} position="sticky" >
 
-            <Container maxWidth="xl">
+            <Container maxWidth="md">
                 <Toolbar disableGutters>
                     {/*This Box is for the Desktop Users */}
                     {/*<Box sx={{display: 'flex', flexDirection: 'row', gap: '7vh'}}>*/}
@@ -251,7 +250,7 @@ export default function NavBar() {
                             <Button
                                 key={page}
                                 onClick={() => handleCloseNavMenu(page)}
-                                sx={{my: 2, display: 'block'}}
+                                sx={{my: 2, display: 'block', color:'white'}}
 
                             >
                                 {page}
@@ -265,7 +264,7 @@ export default function NavBar() {
 
 
                             <IconButton sx={{p: 0, color: 'black'}}>
-                                <SavingsIcon sx={{color: 'black'}}/>
+                                <Typography sx={{color: 'white' , fontSize:'1.4rem'}}>Coupy</Typography>
                             </IconButton>
 
 
