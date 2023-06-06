@@ -35,6 +35,8 @@ export default function AdminPage() {
     const [popUpSelection, setpopUpSelection] = useState<number>(0);
     const [userMessage, setuserMessage] = useState<string>("s");
     const [currentGetAllCompaniesPAge, setcurrentGetAllCompaniesPAge] = useState<number>(1);
+    const [currentCustomersPage,setcurrentCustomersPage] =useState<number>(1);
+    
 
 
     const {register, handleSubmit, watch, formState: {errors}} = useForm<CompanyDTO>();
@@ -200,7 +202,7 @@ export default function AdminPage() {
 
     async function getAllCustomers() {
 
-        setcustomers(await adminService.getAllCustomers())
+        setcustomers(await adminService.getCustomers(currentCustomersPage))
     }
 
     ////////////////////////////////////////GET ALL CUSTOMERS LOGIC /////////////////////////////////////////////

@@ -35,6 +35,8 @@ export default function ShowAllCustomers(props:ShowAllCustomersProps){
                     </div>
                     <Button sx={{backgroundColor: 'black', color: 'white', marginTop: '2vh'}}
                             onClick={() => props.handleActionSelection(AdminActionTypes.GoToActionsSelection)}>Back</Button>
+                    <Button sx={{backgroundColor: 'black', color: 'white', marginTop: '2vh'}}
+                            onClick={() => props.handleActionSelection(AdminActionTypes.GoToActionsSelection)}>Next Page</Button>
                 </>
 
                 : null}

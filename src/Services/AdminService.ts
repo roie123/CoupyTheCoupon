@@ -165,6 +165,17 @@ export class AdminService {
         }
 
 
+
+    }
+    async getCustomers(page:number): Promise<Customer[]> {
+        try {
+            const response = await axios.get<Customer[]>(`${appConfig.adminApiUrl}/customer/byPage/${page}`,
+                {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
+            return response.data;
+        } catch (error) {
+            return [];
+
+        }
     }
     async getNewCoupons(page:number): Promise<Coupon[]> {
         try {
