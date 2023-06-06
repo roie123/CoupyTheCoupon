@@ -14,6 +14,7 @@ import store from "../../Redux/store";
 import CompanyLogin from "../AuthPages/CompanyLogin";
 import {Alert, Button, Snackbar} from "@mui/material";
 import {isErrorMessageFromCoupon} from "../../Models/ErrorMessage";
+import {CompanyActionType} from "../../Redux/CompanyState";
 
 export default function CompanyPage() {
     const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(-1);
@@ -91,6 +92,47 @@ export default function CompanyPage() {
 
 
     async function onSubmitFormCoupon(data: Coupon) {
+        if (data.title.length<4 || data.title.length>10){
+            setpopUpSelection(1);
+            setuserMessage("Coupon Title Could not Be Under 4 letters or Above 10");
+            return;
+        }
+        const startDate = new Date(data.startDate);
+        const endDate = new Date(data.endDate);
+
+        const differenceInTime = endDate.getTime() - startDate.getTime();
+        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
+        if (differenceInDays < 3) {
+
+            setpopUpSelection(1);
+            setuserMessage("Start Date And End Date Should Be At least 3 days Apart ");
+            return
+        }
+        if (data.endDate.getDate() < data.startDate.getDate()){
+            setpopUpSelection(1);
+            setuserMessage("Coupon End Date Cannot be before Start Date ");
+            return
+        }
+        if(data.amount<0){
+            setpopUpSelection(1);
+            setuserMessage("Amount Has To Be More Than Zero ");
+            return;
+        }
+        if (data.description.length<3){
+            setpopUpSelection(1);
+            setuserMessage("Description Has To Contain Real Description ");
+            return;
+        }
+        if (data.price<1){
+            setpopUpSelection(1);
+            setuserMessage("Price Should Be More Than Zero");
+            return;
+        }
+
+
+
+
 
         switch (displayedActionSelection) {
             case 1: {
@@ -177,6 +219,8 @@ export default function CompanyPage() {
         switch (filter) {
             case CouponFilterTypes.None: {
                 const coupons: Coupon[] = await companyService.getCompanyCoupons();
+
+                console.log(coupons);
                 setcompanyCoupons(coupons);
                 break;
             }

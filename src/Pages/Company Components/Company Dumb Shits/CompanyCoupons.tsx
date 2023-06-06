@@ -5,6 +5,7 @@ import {CategoryType} from "../../../Models/Enums/CategoryType";
 import {useState} from "react";
 import {CompanyService} from "../../../Services/CompanyService";
 import {useForm} from "react-hook-form";
+import CouponCard from "../../../General Components/CouponCard";
 
 interface CompanyCouponProps {
     displayedActionSelection: number;
@@ -43,6 +44,8 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
                             <div className="upper-coupon-cont">
                                 <p className={'c-title'}>{coupon.title}</p>
                                 <p className={'c-desc'}>{coupon.description}</p>
+                                <p className={'c-desc'}>{coupon.category}</p>
+
                             </div>
 
                             <div className="bottom-coupon-cont">
@@ -86,21 +89,24 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
                     </div>
                     <div className="coupon-list-cont">
                         {props.coupons.map(coupon => (
-                            <div key={coupon.id} className="coupon-cont">
-                                <div className="upper-coupon-cont">
-                                    <p className={'c-title'}>{coupon.title}</p>
-                                    <p className={'c-desc'}>{coupon.description}</p>
-                                </div>
+                            // <div key={coupon.id} className="coupon-cont">
+                            //     <div className="upper-coupon-cont">
+                            //         <p className={'c-title'}>{coupon.title}</p>
+                            //         <p className={'c-desc'}>{coupon.description}</p>
+                            //         <p className={'c-desc'}>{coupon.category}</p>
+                            //     </div>
+                            //
+                            //     <div className="bottom-coupon-cont">
+                            //         <p className={'c-amount'}>Amount Left : <span>{coupon.amount}</span></p>
+                            //         <p className={'c-price'}>Price
+                            //             : <span>{coupon.price}<span>&#8362;</span></span></p>
+                            //         <p className={'c-exp'}>EXP
+                            //             : {coupon.startDate.toString()} until {coupon.endDate.toString()}</p>
+                            //
+                            //     </div>
+                            // </div>
+                            <CouponCard coupon={coupon} localId={coupon.id!}/>
 
-                                <div className="bottom-coupon-cont">
-                                    <p className={'c-amount'}>Amount Left : <span>{coupon.amount}</span></p>
-                                    <p className={'c-price'}>Price
-                                        : <span>{coupon.price}<span>&#8362;</span></span></p>
-                                    <p className={'c-exp'}>EXP
-                                        : {coupon.startDate.toString()} until {coupon.endDate.toString()}</p>
-
-                                </div>
-                            </div>
                         ))
                         }
                     </div>
@@ -108,7 +114,7 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
 
                 : null}
 
-            {props.displayedActionSelection === 6 ?
+            {props.displayedActionSelection === 6  ?
                 <>
                     <div className="filter-selection-cont">
                         <form onSubmit={handleSubmit((e) => props.handleChangeInMaxPrice(e.max))} >
@@ -153,21 +159,23 @@ export default function CompanyCoupons(props: CompanyCouponProps) {
                     </div>
                     <div className="coupon-list-cont">
                         {props.coupons.map(coupon => (
-                            <div key={coupon.id} className="coupon-cont">
-                                <div className="upper-coupon-cont">
-                                    <p className={'c-title'}>{coupon.title}</p>
-                                    <p className={'c-desc'}>{coupon.description}</p>
-                                </div>
+                            // <div key={coupon.id} className="coupon-cont">
+                            //     <div className="upper-coupon-cont">
+                            //         <p className={'c-title'}>{coupon.title}</p>
+                            //         <p className={'c-desc'}>{coupon.description}</p>
+                            //     </div>
+                            //
+                            //     <div className="bottom-coupon-cont">
+                            //         <p className={'c-amount'}>Amount Left : <span>{coupon.amount}</span></p>
+                            //         <p className={'c-price'}>Price
+                            //             : <span>{coupon.price}<span>&#8362;</span></span></p>
+                            //         <p className={'c-exp'}>EXP
+                            //             : {coupon.startDate.toString()} until {coupon.endDate.toString()}</p>
+                            //
+                            //     </div>
+                            // </div>
 
-                                <div className="bottom-coupon-cont">
-                                    <p className={'c-amount'}>Amount Left : <span>{coupon.amount}</span></p>
-                                    <p className={'c-price'}>Price
-                                        : <span>{coupon.price}<span>&#8362;</span></span></p>
-                                    <p className={'c-exp'}>EXP
-                                        : {coupon.startDate.toString()} until {coupon.endDate.toString()}</p>
-
-                                </div>
-                            </div>
+                            <CouponCard coupon={coupon} localId={coupon.id!}/>
                         ))
                         }
                     </div>

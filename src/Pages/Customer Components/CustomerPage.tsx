@@ -274,7 +274,6 @@ export default function CustomerPage() {
             />
 
 
-
             <GetCouponsByAttribute displayedAction={displayedAction}
                                    handleChangeInPopUpSelection={handleChangeInPopUpSelection}
                                    popUpSelection={popUpSelection}/>
@@ -286,17 +285,11 @@ export default function CustomerPage() {
                 </div> : null}
 
 
-
-
-
             {displayedAction === 5 ? <Suspense fallback={<div>Loading...</div>}>
                 <CustomerDetailsLazy displayedAction={displayedAction}
                                      handleCallForCustomerDetails={handleCallForCustomerDetails}/>
 
-            </Suspense> :null}
-
-
-
+            </Suspense> : null}
 
 
             <Snackbar

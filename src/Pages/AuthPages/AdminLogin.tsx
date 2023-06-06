@@ -22,32 +22,32 @@ export default function AdminLogin(props: AdminLoginProps) {
     const {register, handleSubmit, watch, formState: {errors}} = useForm<LoginRequestDTO>();
     const [loginResponse, setloginResponse] = useState<string>('');
     const [userName, setuserName] = useState<string>('');
-    const [loggedIOd,setloggedIOd] =useState<boolean>(false);
-    
+    const [loggedIOd, setloggedIOd] = useState<boolean>(false);
+
     const nav = useNavigate();
-    const handleLogin = (data: LoginRequestDTO) => {
+    const handleLogin = async (data: LoginRequestDTO) => {
         data.clientType = AuthClientTypes.Admin;
-        clientLogin(data,AuthClientTypes.Admin).then(value => {
-            if (!value) {
-                setloginResponse("Login Values Invalid")
-            } else {
-                // console.log((localStorage.getItem('token') as string));
+        const response = await clientLogin(data, AuthClientTypes.Admin);
 
-                setuserName(localStorage.getItem('userName')!)
-                const authDiv = document.getElementById('auth-cont')!;
-                const welcomeDiv = document.getElementById('logged-in-welcome')!;
-                welcomeDiv.style.visibility = 'visible'
-                welcomeDiv.style.animationName = 'welcome-message';
-                welcomeDiv.style.animationDuration = '1s'
-                welcomeDiv.style.animationFillMode = 'forwards'
-                welcomeDiv.style.animationIterationCount = '1'
-                authDiv.hidden = true;
-                setloggedIOd(true)
-            }
-        });
-        ;
+        if (response.length<2){
+            setloginResponse("Invalid Credentials");
 
-    };
+        }else {
+            setuserName(localStorage.getItem('userName')!)
+            const authDiv = document.getElementById('auth-cont')!;
+            const welcomeDiv = document.getElementById('logged-in-welcome')!;
+            welcomeDiv.style.visibility = 'visible'
+            welcomeDiv.style.animationName = 'welcome-message';
+            welcomeDiv.style.animationDuration = '1s'
+            welcomeDiv.style.animationFillMode = 'forwards'
+            welcomeDiv.style.animationIterationCount = '1'
+            authDiv.hidden = true;
+            setloggedIOd(true)
+        }
+
+
+
+    }
 
     useEffect(() => {
         if (loggedIOd) {
@@ -57,7 +57,7 @@ export default function AdminLogin(props: AdminLoginProps) {
                 welcomeDiv.style.animationDuration = '1s'
                 welcomeDiv.style.animationFillMode = 'forwards'
                 welcomeDiv.style.animationIterationCount = '1'
-                // welcomeDiv.style.visibility='hidden'
+
 
                 // nav('/company');
                 props.handleActionSelection(AdminActionTypes.GoToActionsSelection);
@@ -69,10 +69,11 @@ export default function AdminLogin(props: AdminLoginProps) {
             {props.displayedActionSelection === -1 ? <>             <SuccesfulLogin userName={userName}/>
                 <div className="auth-cont" id={'auth-cont'}>
                     <div className="login-cont">
-                        <form  onSubmit={handleSubmit(handleLogin)}>
-                            <Box sx={{display:'flex' , flexDirection:'column' , gap:'5vh', }}>
-                                <TextField hidden={true} sx={{zIndex:'0'}} label="Email"  type="text" {...register('userName')} />
-                                <TextField  type="password" label="Password" {...register('password')} />
+                        <form onSubmit={handleSubmit(handleLogin)}>
+                            <Box sx={{display: 'flex', flexDirection: 'column', gap: '5vh',}}>
+                                <TextField hidden={true} sx={{zIndex: '0'}} label="Email"
+                                           type="text" {...register('userName')} />
+                                <TextField type="password" label="Password" {...register('password')} />
                                 <Button type={'submit'}>Submit</Button>
 
 

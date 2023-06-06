@@ -6,6 +6,7 @@ import axios from "axios";
 import store from "../Redux/store";
 import {ErrorMessage} from "../Models/ErrorMessage";
 import {sendResponseAsErrorMessage} from "./AdminService";
+import {CompanyActionType, CompanyState} from "../Redux/CompanyState";
 
 export class CompanyService {
     private static instance: CompanyService;
@@ -26,6 +27,10 @@ export class CompanyService {
         try {
             const response = await axios.post<number>(`${appConfig.companyApiUrl}/coupon`, couponToAdd,
                 {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
+            if (store.getState().companyReducer.coupons.length>1){
+
+                store.dispatch({type:CompanyActionType.SetCompanyCoupons , payload:[...{...store.getState().companyReducer.coupons} , couponToAdd]})
+            }
             return response.data;
         } catch (error) {
             return sendResponseAsErrorMessage(error)
@@ -39,6 +44,17 @@ export class CompanyService {
             const response = await axios.put<ErrorMessage>(`${appConfig.companyApiUrl}/coupon/${couponId}`,
                 couponToUpdate,
                 {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
+            if(store.getState().companyReducer.coupons.length>1){
+                const indexOfExistingCoupon :number|undefined= {...store.getState().companyReducer.coupons}.filter(value => value.id===couponId)[0].id;
+                if (indexOfExistingCoupon!==undefined){
+                    let couponsForRedux= {...store.getState().companyReducer.coupons}.splice(indexOfExistingCoupon,1,couponToUpdate);
+                    let state : CompanyState = {...store.getState().companyReducer};
+                    state.coupons= {...couponsForRedux}
+                    store.dispatch({type:CompanyActionType.SetCompanyCoupons , payload:state})
+                }
+
+
+            }
             return new ErrorMessage();
 
         }catch (error){
@@ -53,6 +69,18 @@ export class CompanyService {
         try {
             const response = await axios.delete<ErrorMessage>(`${appConfig.companyApiUrl}/coupon/${couponId}`,
                 {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
+            if(store.getState().companyReducer.coupons.length>1){
+                const indexOfExistingCoupon :number|undefined= {...store.getState().companyReducer.coupons}.filter(value => value.id===couponId)[0].id;
+                if (indexOfExistingCoupon!==undefined){
+                    let couponsForRedux= {...store.getState().companyReducer.coupons}.splice(indexOfExistingCoupon,1);
+                    let state : CompanyState = {...store.getState().companyReducer};
+                    state.coupons= {...couponsForRedux}
+                    store.dispatch({type:CompanyActionType.SetCompanyCoupons , payload:state})
+                }
+
+
+            }
+
             return response.data;
         }catch (error){
             return sendResponseAsErrorMessage(error)
@@ -64,8 +92,16 @@ export class CompanyService {
     }
 
     async getCompanyCoupons(): Promise<Coupon[]> {
+
+        if (store.getState().companyReducer.coupons.length>1){
+            return [...store.getState().companyReducer.coupons]
+        }
         const response = await axios.get<Coupon[]>(`${appConfig.companyApiUrl}/getCoupons`,
             {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}});
+
+        store.dispatch({type:CompanyActionType.SetCompanyCoupons , payload:response.data})
+
+
         return response.data;
 
 

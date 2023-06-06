@@ -5,6 +5,8 @@ import {CategoryType} from "../Models/Enums/CategoryType";
 import {Customer} from "../Models/Customer";
 import {CouponSearchFilterTypes} from "../Models/Enums/CouponSearchFilterTypes";
 import store from "../Redux/store";
+import {ErrorMessage} from "../Models/ErrorMessage";
+import {sendResponseAsErrorMessage} from "./AdminService";
 
 export class CustomerService {
 
@@ -18,17 +20,16 @@ export class CustomerService {
         return CustomerService.instance;
     }
 
-    async purchaseCoupon(couponId: number): Promise<number> {
-        console.log(couponId);
+    async purchaseCoupon(couponId: number): Promise<number|ErrorMessage> {
+
         try {
-            const response: AxiosResponse<number> = await axios.put(
+            const response: AxiosResponse<number|ErrorMessage> = await axios.put(
                 `http://localhost:8080/api/customer/purchaseCoupon/${couponId}`,null,
                 {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}}
             );
-            return response.data as number ;
+            return response.data  ;
         } catch (error: unknown) {
-            console.error(error);
-            throw error;
+        return  sendResponseAsErrorMessage(error);
         }
     }
     //    @PutMapping("/purchaseCoupon/{couponId}")

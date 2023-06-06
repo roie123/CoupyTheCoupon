@@ -103,6 +103,8 @@ margin-right: 1vh;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+
 .coupon-cont{
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     display: flex;
@@ -111,6 +113,18 @@ margin-right: 1vh;
     justify-content: space-between;
     border-radius: 3svh;
     padding: 3vh;
+}
+
+.id-thingy{
+    background-color: #5f91ff;
+    position: sticky;
+    border-radius: 50%;
+    padding: 0.5vh;
+    height: 4vh;
+    width: 4vh;
+    font-size: 0.8rem;
+    display: flex;
+
 }
 .deleting-company-cont{
     height: 40vh;

@@ -72,7 +72,7 @@ export async function clientLogin(loginRequest: LoginRequestDTO , type: AuthClie
         if (error.response && error.response.status === 403) {
             return error.response.status.toString();
         }
-        throw error;
+        return '';
     }
 }
 

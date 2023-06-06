@@ -1,9 +1,10 @@
-import {Box, Button, Dialog, TextField, Typography} from "@mui/material";
+import {Box, Button, MenuItem, Select, TextField} from "@mui/material";
 import {Controller, useForm} from "react-hook-form";
 import {Coupon} from "../../../Models/Coupon";
 import {CompanyActionTypes} from "../../../Models/Enums/CompanyActionTypes";
 import {DatePicker} from '@mui/x-date-pickers';
 import {useState} from "react";
+import {CategoryType} from "../../../Models/Enums/CategoryType";
 
 interface CompanyCouponActionsProps {
     onSubmitFormCompany(data: Coupon): void;
@@ -20,7 +21,11 @@ export default function CompanyCouponActions(props: CompanyCouponActionsProps) {
     const {control, register, handleSubmit, watch, formState: {errors}} = useForm<Coupon>();
     const [startDate, setstartDate] = useState<Date>();
     const [endDate, setendDate] = useState<Date>();
+    const [currentCategory,setcurrentCategory] =useState<CategoryType>(CategoryType.StupidFace);
 
+function handleChangeCategory(category:CategoryType){
+setcurrentCategory(category);
+}
 
     return (
         props.displayedActionSelection === 1 || props.displayedActionSelection === 2 ?
@@ -32,6 +37,15 @@ export default function CompanyCouponActions(props: CompanyCouponActionsProps) {
                             <TextField type={'number'} placeholder={'Coupon Id'} {...register("id")}
                                        required={true}/> : null}
                         <TextField placeholder={'Coupon description'} {...register("description")} required={true}/>
+                        <Select
+                            {...register('category')}
+                                value={currentCategory}
+
+                        >
+                            <MenuItem onClick={()=>handleChangeCategory(CategoryType.StupidFace) } value={CategoryType.StupidFace}>{CategoryType.StupidFace}</MenuItem>
+                            <MenuItem onClick={()=>handleChangeCategory(CategoryType.Shitty) } value={CategoryType.Shitty}>{CategoryType.Shitty}</MenuItem>
+                            <MenuItem onClick={()=>handleChangeCategory(CategoryType.SuckAss) } value={CategoryType.SuckAss}>{CategoryType.SuckAss}</MenuItem>
+                        </Select>
                         {/*<DatePicker label={'Start Date'}   />*/}
                         {/*<DatePicker  label={'End Date'}   />*/}
                         <Box sx={{display: 'flex'}}>
@@ -50,8 +64,8 @@ export default function CompanyCouponActions(props: CompanyCouponActionsProps) {
                                 render={({field}) => (
                                     <DatePicker
                                         label={'Pick Start Date'}
-
                                         onChange={(date) => field.onChange(date)}
+                                        minDate={Date.now()}
                                     />
                                 )}
                             />
@@ -63,6 +77,7 @@ export default function CompanyCouponActions(props: CompanyCouponActionsProps) {
                                     <DatePicker
                                         label={'Pick End Date'}
                                         onChange={(date) => field.onChange(date)}
+                                        minDate={Date.now()}
                                     />
                                 )}
                             />

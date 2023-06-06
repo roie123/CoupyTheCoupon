@@ -3,10 +3,9 @@ import axios, {AxiosError} from "axios";
 import appConfig from "../Config/Config";
 import {Customer} from "../Models/Customer";
 import store from "../Redux/store";
-import {throws} from "assert";
 import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import {ErrorMessage} from "../Models/ErrorMessage";
+import {AdminActionType, AdminState} from "../Redux/AdminState";
 
 export class AdminService {
     private static instance: AdminService;
@@ -27,7 +26,9 @@ export class AdminService {
                 companyToAdd,
                 {headers: {"Authorization": "Bearer " + store.getState().authReducer.token}}
             );
-
+            let adminFromStore:AdminState = {...store.getState().adminReducer};
+            adminFromStore.companies = [...adminFromStore.companies , companyToAdd];
+            store.dispatch({type : AdminActionType.SetAdminState , payload:adminFromStore})
             return new ErrorMessage();
         } catch (error) {
             return sendResponseAsErrorMessage(error);
