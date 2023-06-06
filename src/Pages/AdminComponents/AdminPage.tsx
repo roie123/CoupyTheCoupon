@@ -40,7 +40,10 @@ export default function AdminPage() {
     const {register, handleSubmit, watch, formState: {errors}} = useForm<CompanyDTO>();
 
     const adminService: AdminService = AdminService.getInstance();
-
+    /**
+     * This function will handle the Fom data input and validation according to the displayedActionSelection
+     * @param data the fomr data
+     */
     const onSubmitFormCompany = async (data: CompanyDTO) => {
     if (data.name.length<4 || data.name.length>15){
         setuserMessage("Company Name Should Be More than 4 Letters And Less Than 15");
@@ -104,6 +107,10 @@ export default function AdminPage() {
 
     }
 
+    /**
+     * This func will handle the current selected Action
+     * @param action the selected Action
+     */
     async function handleActionSelection(action: AdminActionTypes) {
 
         switch (action) {
