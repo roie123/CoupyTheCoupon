@@ -37,22 +37,33 @@ export default function AdminPage() {
     const [currentGetAllCompaniesPAge, setcurrentGetAllCompaniesPAge] = useState<number>(1);
 
 
-
-
-
     const {register, handleSubmit, watch, formState: {errors}} = useForm<CompanyDTO>();
 
     const adminService: AdminService = AdminService.getInstance();
 
     const onSubmitFormCompany = async (data: CompanyDTO) => {
-
+    if (data.name.length<4 || data.name.length>15){
+        setuserMessage("Company Name Should Be More than 4 Letters And Less Than 15");
+        setpopUpSelection(1);
+        return;
+    }
+    if (!data.email.includes("@")){
+        setuserMessage("Not A Vaild Email");
+        setpopUpSelection(1);
+        return;
+    }
+    if (data.password!.length<6 ){
+        setuserMessage("PassWord Should Be Mort than 6 letters And Less Than 50");
+        setpopUpSelection(1);
+        return;
+    }
         switch (displayedActionSelection) {
             case 1: {
                 const response = await adminService.addCompany(data).then().catch()
-                if (response.message!==undefined && response.message.length>1 ){
+                if (response.message !== undefined && response.message.length > 1) {
                     setuserMessage(response.message);
                     setpopUpSelection(1);
-                }else {
+                } else {
                     setuserMessage("Company Added Successfully");
                     setpopUpSelection(2);
                 }
@@ -60,11 +71,11 @@ export default function AdminPage() {
                 break
             }
             case 2: {
-                const response = await adminService.updateCompany(data,data.id).then().catch()
-                if (response.message!==undefined && response.message.length>1 ){
+                const response = await adminService.updateCompany(data, data.id).then().catch()
+                if (response.message !== undefined && response.message.length > 1) {
                     setuserMessage(response.message);
                     setpopUpSelection(1);
-                }else {
+                } else {
                     setuserMessage("Company Updated Successfully");
                     setpopUpSelection(2);
                 }
@@ -73,10 +84,10 @@ export default function AdminPage() {
             }
             case 3: {
                 const response = await adminService.deleteCompany(data.id).then().catch()
-                if (response.message!==undefined && response.message.length>1 ){
+                if (response.message !== undefined && response.message.length > 1) {
                     setuserMessage(response.message);
                     setpopUpSelection(1);
-                }else {
+                } else {
                     setuserMessage("Company Deleted Successfully");
                     setpopUpSelection(2);
                 }
@@ -160,7 +171,7 @@ export default function AdminPage() {
     const [selectedCompanyById, setselectedCompanyById] = useState<CompanyDTO>();
 
     async function submitSearchForCompanyById(data: CompanyDTO) {
-        let companyOrError: CompanyDTO|ErrorMessage = await adminService.getSingleCompany(data.id);
+        let companyOrError: CompanyDTO | ErrorMessage = await adminService.getSingleCompany(data.id);
         if (isErrorMessage(companyOrError)) {
             console.log("Error:", companyOrError.message);
             setuserMessage(companyOrError.message);
@@ -169,7 +180,6 @@ export default function AdminPage() {
         } else {
             setselectedCompanyById(companyOrError);
         }
-
 
 
     }
@@ -195,7 +205,7 @@ export default function AdminPage() {
 
     async function submitSearchForCustomerById(data: Customer) {
 
-        let customerFromDB: Customer|ErrorMessage = await adminService.getSingleCustomer(data.id);
+        let customerFromDB: Customer | ErrorMessage = await adminService.getSingleCustomer(data.id);
 
         if (isErrorMessageFromCustomer(customerFromDB)) {
             setuserMessage(customerFromDB.message);
@@ -258,15 +268,15 @@ export default function AdminPage() {
                                     submitSearchForCustomerById={submitSearchForCustomerById}
                                     handleActionSelection={handleActionSelection}
                                     selectedCustomerById={selectedCustomerById!}/>
-                <Snackbar sx={{position: 'absolute', bottom: '2vh'}} open={popUpSelection ===2}
+                <Snackbar sx={{position: 'absolute', bottom: '2vh'}} open={popUpSelection === 2}
                           message={userMessage!}>
-                    <Alert  severity="success" sx={{ width: '100%' }}>
+                    <Alert severity="success" sx={{width: '100%'}}>
                         {userMessage}
                     </Alert>
 
                 </Snackbar>
-                <Snackbar open={popUpSelection===1} autoHideDuration={1000} >
-                    <Alert  severity="error" sx={{ width: '100%' }}>
+                <Snackbar open={popUpSelection === 1} autoHideDuration={1000}>
+                    <Alert severity="error" sx={{width: '100%'}}>
                         {userMessage}
                     </Alert>
                 </Snackbar>

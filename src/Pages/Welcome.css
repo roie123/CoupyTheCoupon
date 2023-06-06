@@ -1,0 +1,24 @@
+.welcome-cont {
+text-align: center;
+}
+.title-cont h4{
+
+}
+.title-cont h5{
+    text-align: center;
+}
+
+.title-cont{
+    text-align: center;
+margin-top: 10vh;
+}
+
+.displayed-coupon-list{
+    height: 50vh;
+    overflow-y: scroll;
+padding: 3svh;
+display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    margin-top: 10vh;
+}

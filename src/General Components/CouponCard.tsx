@@ -19,7 +19,9 @@ export default function CouponCard(props: CouponCardProps) {
         <>
 
             <div key={props.coupon.id} id={props.localId.toString()} className="coupon-cont">
-
+                <div className="img-cont">
+                    <img className={'img-of-coupon'} src={props.coupon.image!==null  ? "https://static.wixstatic.com/media/311930_6c3bd7faebf3450483a59c746487ac81~mv2.png" : props.coupon.image } />
+                </div>
                 <div className="upper-coupon-cont">
 
                     <p className={'c-title'}>{props.coupon.title}</p>

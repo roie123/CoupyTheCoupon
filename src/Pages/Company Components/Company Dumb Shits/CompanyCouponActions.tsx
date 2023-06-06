@@ -37,6 +37,7 @@ setcurrentCategory(category);
                             <TextField type={'number'} placeholder={'Coupon Id'} {...register("id")}
                                        required={true}/> : null}
                         <TextField placeholder={'Coupon description'} {...register("description")} required={true}/>
+                        <TextField placeholder={'Coupon Image Link'} {...register("image")} required={false}/>
                         <Select
                             {...register('category')}
                                 value={currentCategory}

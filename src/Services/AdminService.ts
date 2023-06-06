@@ -6,6 +6,7 @@ import store from "../Redux/store";
 import {Simulate} from "react-dom/test-utils";
 import {ErrorMessage} from "../Models/ErrorMessage";
 import {AdminActionType, AdminState} from "../Redux/AdminState";
+import {Coupon} from "../Models/Coupon";
 
 export class AdminService {
     private static instance: AdminService;
@@ -165,7 +166,16 @@ export class AdminService {
 
 
     }
+    async getNewCoupons(page:number): Promise<Coupon[]> {
+        try {
+            const response = await axios.get<Coupon[]>(`http://localhost:8080/welcome/coupons/${page}/10`);
+            return response.data;
+        }catch (error){
+       return [];
+        }
 
+
+    }
 
 }
 export function  sendResponseAsErrorMessage(error: unknown): ErrorMessage {
