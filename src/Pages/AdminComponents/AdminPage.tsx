@@ -12,7 +12,7 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ActionCard from "../../General Components/ActionCard";
 import {useEffect, useState} from "react";
 import ActionsSelection from "./AdminDumbShits/ActionsSelection";
-import {Button, containerClasses, Snackbar, switchClasses} from "@mui/material";
+import {Alert, Button, containerClasses, Snackbar, switchClasses} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {CompanyDTO} from "../../Models/Company";
 import {AdminActionTypes} from "./AdminActionTypes";
@@ -25,6 +25,7 @@ import AddUpdateCustomer from "./AdminDumbShits/AddUpdateCustomer";
 import ShowAllCustomers from "./AdminDumbShits/ShowAllCustomers";
 import ShowSingleCustomer from "./AdminDumbShits/ShowSingleCustomer";
 import AdminLogin from "../AuthPages/AdminLogin";
+import {ErrorMessage, isErrorMessage, isErrorMessageFromCustomer} from "../../Models/ErrorMessage";
 
 
 export default function AdminPage() {
@@ -36,16 +37,7 @@ export default function AdminPage() {
     const [currentGetAllCompaniesPAge, setcurrentGetAllCompaniesPAge] = useState<number>(1);
 
 
-    function handleChangeINPopup(change: number) {
-        switch (change) {
-            case 1: {
-                setuserMessage("Company Added Successfully")
-                setpopUpSelection(1);
-            }
 
-
-        }
-    }
 
 
     const {register, handleSubmit, watch, formState: {errors}} = useForm<CompanyDTO>();
@@ -56,24 +48,41 @@ export default function AdminPage() {
 
         switch (displayedActionSelection) {
             case 1: {
-                const response = await adminService.addCompany(data).then(value => {
-                    setuserMessage("Company Added Successfully")
+                const response = await adminService.addCompany(data).then().catch()
+                if (response.message!==undefined && response.message.length>1 ){
+                    setuserMessage(response.message);
                     setpopUpSelection(1);
+                }else {
+                    setuserMessage("Company Added Successfully");
+                    setpopUpSelection(2);
+                }
 
-                }).catch(e => {
-                    setuserMessage("Company Cannot be Added")
-                    setpopUpSelection(1);
-                });
-
-
-                break;
+                break
             }
             case 2: {
-                await adminService.updateCompany(data, data.id);
+                const response = await adminService.updateCompany(data,data.id).then().catch()
+                if (response.message!==undefined && response.message.length>1 ){
+                    setuserMessage(response.message);
+                    setpopUpSelection(1);
+                }else {
+                    setuserMessage("Company Updated Successfully");
+                    setpopUpSelection(2);
+                }
+                // await adminService.updateCompany(data, data.id);
                 break;
             }
             case 3: {
-                await adminService.deleteCompany(data.id);
+                const response = await adminService.deleteCompany(data.id).then().catch()
+                if (response.message!==undefined && response.message.length>1 ){
+                    setuserMessage(response.message);
+                    setpopUpSelection(1);
+                }else {
+                    setuserMessage("Company Deleted Successfully");
+                    setpopUpSelection(2);
+                }
+
+                break;
+                // await adminService.deleteCompany(data.id);
             }
 
         }
@@ -139,7 +148,6 @@ export default function AdminPage() {
 
     async function getCompanyList() {
         const companiesUnFiltered = (await adminService.getAllCompanies(currentGetAllCompaniesPAge, 6));
-        console.log(companiesUnFiltered);
 
         setcompanyList(companiesUnFiltered);
     }
@@ -152,9 +160,16 @@ export default function AdminPage() {
     const [selectedCompanyById, setselectedCompanyById] = useState<CompanyDTO>();
 
     async function submitSearchForCompanyById(data: CompanyDTO) {
+        let companyOrError: CompanyDTO|ErrorMessage = await adminService.getSingleCompany(data.id);
+        if (isErrorMessage(companyOrError)) {
+            console.log("Error:", companyOrError.message);
+            setuserMessage(companyOrError.message);
+            setpopUpSelection(1);
 
-        let company: CompanyDTO = await adminService.getSingleCompany(data.id);
-        setselectedCompanyById(company);
+        } else {
+            setselectedCompanyById(companyOrError);
+        }
+
 
 
     }
@@ -180,9 +195,15 @@ export default function AdminPage() {
 
     async function submitSearchForCustomerById(data: Customer) {
 
-        let customerFromDB: Customer = await adminService.getSingleCustomer(data.id);
-        setselectedCustomerById(customerFromDB);
+        let customerFromDB: Customer|ErrorMessage = await adminService.getSingleCustomer(data.id);
 
+        if (isErrorMessageFromCustomer(customerFromDB)) {
+            setuserMessage(customerFromDB.message);
+            setpopUpSelection(1);
+
+        } else {
+            setselectedCustomerById(customerFromDB);
+        }
     }
 
     async function changeAllCompaniesViewPage(page: number) {
@@ -197,9 +218,9 @@ export default function AdminPage() {
 
     useEffect(() => {
         setTimeout(() => {
-            setpopUpSelection(0);
+            setpopUpSelection(prevState => 0);
         }, 2000)
-    }, [userMessage])
+    }, [userMessage, popUpSelection])
 
 
     return (
@@ -237,8 +258,18 @@ export default function AdminPage() {
                                     submitSearchForCustomerById={submitSearchForCustomerById}
                                     handleActionSelection={handleActionSelection}
                                     selectedCustomerById={selectedCustomerById!}/>
-                <Snackbar sx={{position: 'absolute', bottom: '2vh'}} open={popUpSelection !== 0}
-                          message={userMessage!}/>
+                <Snackbar sx={{position: 'absolute', bottom: '2vh'}} open={popUpSelection ===2}
+                          message={userMessage!}>
+                    <Alert  severity="success" sx={{ width: '100%' }}>
+                        {userMessage}
+                    </Alert>
+
+                </Snackbar>
+                <Snackbar open={popUpSelection===1} autoHideDuration={1000} >
+                    <Alert  severity="error" sx={{ width: '100%' }}>
+                        {userMessage}
+                    </Alert>
+                </Snackbar>
 
             </div>
         </>

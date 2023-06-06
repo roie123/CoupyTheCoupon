@@ -21,13 +21,15 @@ export default function CompanyPage() {
     const [popUpSelection, setpopUpSelection] = useState<number>(0);
 
 
-    useEffect(() => {
-        setData();
-    }, [])
-
+    // useEffect(() => {
+    //     setData();
+    // }, [])
+    //
     async function setData() {
+        if (store.getState().authReducer.token !== null && store.getState().authReducer.token!.length !== undefined && store.getState().authReducer.token!.length! > 5) {
+            setcurrentCompany(await companyService.getCompanyDetails());
 
-        setcurrentCompany(await companyService.getCompanyDetails());
+        }
     }
 
 
@@ -68,7 +70,10 @@ export default function CompanyPage() {
                 setdisplayedActionSelection(6);
                 break;
             case CompanyActionTypes.GetCompanyDetails:
-                setdisplayedActionSelection(7);
+                setData().then(() => {
+                    setdisplayedActionSelection(7);
+
+                })
 
                 break;
             case CompanyActionTypes.GoBackToSelection:
@@ -98,25 +103,25 @@ export default function CompanyPage() {
 
         }
         console.log(c);
-        const response = await companyService.addCoupon(c).then(value =>{
+        const response = await companyService.addCoupon(c).then(value => {
                 handleChangeInPopupSelection(1);
                 // handleCompanyActionSelection(CompanyActionTypes.GoBackToSelection);
 
 
             }
-            );
+        );
 
     }
 
-    function handleChangeInPopupSelection(id:number) {
-        switch (id){
-            case 1:{
+    function handleChangeInPopupSelection(id: number) {
+        switch (id) {
+            case 1: {
                 setpopUpSelection(id);
                 break;
             }
 
 
-            case 0:{
+            case 0: {
                 setpopUpSelection(id);
                 break;
             }
@@ -172,7 +177,6 @@ export default function CompanyPage() {
 
     async function handleChangeInMaxPrice(maxPrice: number) {
         //TODO if redux already has the coupons pull from there
-        console.log("hi");
         setcompanyCoupons(await companyService.getCompanyCouponsByMaxPrice(maxPrice));
 
     }
@@ -187,7 +191,8 @@ export default function CompanyPage() {
             <div className="company-cont">
                 <CompanyActionSelection displayedActionSelection={displayedActionSelection}
                                         handleCompanyActionSelection={handleCompanyActionSelection}/>
-                <CompanyCouponActions onSubmitFormCompany={onSubmitFormCoupon} popUpSelection={popUpSelection} handleChangeInPopupSelection={handleChangeInPopupSelection}
+                <CompanyCouponActions onSubmitFormCompany={onSubmitFormCoupon} popUpSelection={popUpSelection}
+                                      handleChangeInPopupSelection={handleChangeInPopupSelection}
                                       displayedActionSelection={displayedActionSelection}
                                       handleActionSelection={handleCompanyActionSelection}/>
                 <CompanyCoupons coupons={companyCoupons} displayedActionSelection={displayedActionSelection}
@@ -199,9 +204,7 @@ export default function CompanyPage() {
                 />
                 {displayedActionSelection === 7 ?
                     <CompanyDetails displaySelection={displayedActionSelection} currentCompany={currentCompany!}/>
-                :null}
-
-
+                    : null}
 
 
                 {displayedActionSelection !== 0 && displayedActionSelection !== -1 ?

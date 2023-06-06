@@ -57,7 +57,6 @@ export async function clientLogin(loginRequest: LoginRequestDTO , type: AuthClie
 
 
         let username: string = jwt_decode(shittyToken.token);
-        console.log(response);
         // @ts-ignore
         if (username.role === type) {
             // @ts-ignore

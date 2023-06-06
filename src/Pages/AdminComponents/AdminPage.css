@@ -112,7 +112,23 @@ margin-right: 1vh;
     border-radius: 3svh;
     padding: 3vh;
 }
+.deleting-company-cont{
+    height: 40vh;
 
+
+}
+.deleting-company-cont form{
+    height: 40vh;
+    display: flex;
+    gap: 4vh;
+    flex-direction: column;
+
+}
+.deleting-company-cont h4{
+    text-align: center;
+    margin: 4vh auto;
+    opacity: 0.9;
+}
 .upper-coupon-cont{
     display: flex;
     flex-direction: column;

@@ -46,7 +46,7 @@ export default function (props:ShowSingleCompanyProps){
                                 </div>
                             </div>
                         </div>
-                        <div className="coupon-list-cont">
+                        {props.selectedCompanyById.couponList !== undefined ?     <div className="coupon-list-cont">
                             {props.selectedCompanyById?.couponList.map(coupon => (
                                 <div key={coupon.id} className="coupon-cont">
                                     <div className="upper-coupon-cont">
@@ -65,7 +65,8 @@ export default function (props:ShowSingleCompanyProps){
                                 </div>
                             ))
                             }
-                        </div>
+                        </div> :null }
+
                     </>
 
                     : null}
