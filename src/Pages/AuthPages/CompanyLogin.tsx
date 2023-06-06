@@ -48,12 +48,14 @@ export default function CompanyLogin(props: CompanyLoginProps) {
     useEffect(() => {
         if (userName.length > 2) {
             setTimeout(() => {
-                const welcomeDiv = document.getElementById('logged-in-welcome')!;
-                welcomeDiv.style.animationName = 'welcome-message-closing';
-                welcomeDiv.style.animationDuration = '1s'
-                welcomeDiv.style.animationFillMode = 'forwards'
-                welcomeDiv.style.animationIterationCount = '1'
-                // welcomeDiv.style.visibility='hidden'
+                const welcomeDiv = document.getElementById('logged-in-welcome');
+                if (welcomeDiv !== null){
+                    welcomeDiv.style.animationName = 'welcome-message-closing';
+                    welcomeDiv.style.animationDuration = '1s'
+                    welcomeDiv.style.animationFillMode = 'forwards'
+                    welcomeDiv.style.animationIterationCount = '1'
+                }
+
 
                 // nav('/company');
                 props.handleActionSelection(CompanyActionTypes.Login);

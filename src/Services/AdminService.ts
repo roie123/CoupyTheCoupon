@@ -30,7 +30,7 @@ export class AdminService {
 
             return new ErrorMessage();
         } catch (error) {
-            return this.sendResponseAsErrorMessage(error);
+            return sendResponseAsErrorMessage(error);
         }
 
     }
@@ -166,4 +166,15 @@ export class AdminService {
     }
 
 
+}
+export function  sendResponseAsErrorMessage(error: unknown): ErrorMessage {
+    if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorMessage>;
+
+        if (axiosError.response) {
+            return axiosError.response.data;
+        }
+    }
+
+    return new ErrorMessage();
 }

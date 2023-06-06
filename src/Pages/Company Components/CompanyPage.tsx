@@ -12,13 +12,15 @@ import CompanyDetails from "./Company Dumb Shits/CompanyDetails";
 import {CompanyDTO} from "../../Models/Company";
 import store from "../../Redux/store";
 import CompanyLogin from "../AuthPages/CompanyLogin";
-import {Button} from "@mui/material";
+import {Alert, Button, Snackbar} from "@mui/material";
+import {isErrorMessageFromCoupon} from "../../Models/ErrorMessage";
 
 export default function CompanyPage() {
     const [displayedActionSelection, setdisplayedActionSelection] = useState<number>(-1);
     const [maxPrice, setmaxPrice] = useState<number>(0);
     const [currentCompany, setcurrentCompany] = useState<CompanyDTO>();
     const [popUpSelection, setpopUpSelection] = useState<number>(0);
+    const [userMessage, setuserMessage] = useState<string>("s");
 
 
     // useEffect(() => {
@@ -48,7 +50,6 @@ export default function CompanyPage() {
 
             case CompanyActionTypes.AddCoupon:
                 setdisplayedActionSelection(1);
-                console.log("Hi");
 
                 break;
             case CompanyActionTypes.UpdateCoupon:
@@ -90,26 +91,58 @@ export default function CompanyPage() {
 
 
     async function onSubmitFormCoupon(data: Coupon) {
-        console.log(data);
-        let c: Coupon = {
-            amount: data.amount,
-            category: data.category,
-            description: data.description,
-            endDate: data.endDate,
-            image: data.image,
-            price: data.price,
-            startDate: data.startDate,
-            title: data.title
 
-        }
-        console.log(c);
-        const response = await companyService.addCoupon(c).then(value => {
-                handleChangeInPopupSelection(1);
-                // handleCompanyActionSelection(CompanyActionTypes.GoBackToSelection);
+        switch (displayedActionSelection) {
+            case 1: {
+                let c: Coupon = {
+                    amount: data.amount,
+                    category: data.category,
+                    description: data.description,
+                    endDate: data.endDate,
+                    image: data.image,
+                    price: data.price,
+                    startDate: data.startDate,
+                    title: data.title
 
+                }
+                const response = await companyService.addCoupon(c);
+                if (typeof response === 'number') {
+                    setuserMessage("Coupon Added Successfully");
+                    setpopUpSelection(2);
 
+                } else {
+                    setpopUpSelection(1);
+                    setuserMessage(response.message);
+
+                }
+                break;
             }
-        );
+            case 2: {
+                const response = await companyService.updateCoupon(data, data.id!);
+
+                if (response.message.length > 1) {
+                    setuserMessage(response.message);
+                    setpopUpSelection(1);
+
+                } else {
+                    setuserMessage("Coupon Has Been Updated");
+                    setpopUpSelection(1);
+                }
+
+
+                break;
+            }
+            case 3: {
+                const response = await companyService.deleteCoupon(data.id!);
+                if (response.message !== undefined) {
+                    setuserMessage(response.message);
+                    setpopUpSelection(1);
+                }
+
+                break;
+            }
+        }
+
 
     }
 
@@ -183,6 +216,15 @@ export default function CompanyPage() {
 
 
     ////////////GET COMPANY COUPONS ///////////////////////////
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            setpopUpSelection(prevState => 0);
+        }, 2000)
+    }, [userMessage, popUpSelection])
+
+
     return (
         <>
             <CompanyLogin displayedActionSelection={displayedActionSelection}
@@ -215,7 +257,18 @@ export default function CompanyPage() {
                     : null}
 
             </div>
+            <Snackbar sx={{position: 'absolute', bottom: '2vh'}} open={popUpSelection === 2}
+                      message={userMessage!}>
+                <Alert severity="success" sx={{width: '100%'}}>
+                    {userMessage}
+                </Alert>
 
+            </Snackbar>
+            <Snackbar open={popUpSelection === 1}>
+                <Alert severity="error" sx={{width: '100%'}}>
+                    {userMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

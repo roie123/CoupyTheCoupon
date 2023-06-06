@@ -83,10 +83,7 @@ export default function CompanyCouponActions(props: CompanyCouponActionsProps) {
 
 
                 </form>
-                <Dialog open={props.popUpSelection===1}>
-                    <Typography>Coupon Added Successfully </Typography>
-                    <Button onClick={()=> props.handleActionSelection(CompanyActionTypes.GoBackToSelection)} >Accept</Button>
-                </Dialog>
+
 
             </div>) :
             props.displayedActionSelection === 3 ?
